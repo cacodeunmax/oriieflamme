@@ -1,0 +1,1 @@
+typedef struct not_defined *carte;
