@@ -30,9 +30,9 @@ void show_main(faction);
 /**
 * \brief Show the option to redraw
 * \param f The faction could redraw
-* \return Nothing
+* \return 1 if the player redraw, 0 otherwise
 */
-void show_redraw(faction);
+int show_redraw(faction);
 
 /**
 * \brief Show the option to chose a card to play
@@ -45,9 +45,11 @@ carte chose_card(faction);
 * \brief Show the option to chose where to play the card
 * \param c The card played
 * \param p The board
+* \param a A pointer to the column
+* \param b A pointer to the line
 * \return Nothing
 */
-void chose_pos(carte, plateau);
+void chose_pos(carte, plateau, int*, int*);
 
 /**
 * \brief Show the effect of the last played card
