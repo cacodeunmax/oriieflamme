@@ -50,7 +50,6 @@ carte chose_card(faction);
 
 /**
 * \brief Show the option to chose where to play the card
-* \param c The card played
 * \param p The board
 * \param a A pointer to the column
 * \param b A pointer to the line
