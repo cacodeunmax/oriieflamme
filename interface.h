@@ -13,6 +13,13 @@
 * - show_winner() qui affiche le gagnant
 */
 
+
+
+#include "plateau.h"
+
+
+
+
 /**
 * \brief Show the board
 * \param p The board
@@ -25,7 +32,7 @@ void show_plateau(plateau);
 * \param f The faction whose hand is shown
 * \return Nothing
 */
-void show_main(faction);
+void show_hand(faction);
 
 /**
 * \brief Show the option to redraw
@@ -49,7 +56,7 @@ carte chose_card(faction);
 * \param b A pointer to the line
 * \return Nothing
 */
-void chose_pos(carte, plateau, int*, int*);
+void chose_pos(plateau, int*, int*);
 
 /**
 * \brief Show the effect of the last played card
@@ -59,7 +66,16 @@ void chose_pos(carte, plateau, int*, int*);
 void show_effect(carte);
 
 /**
-* \brief Show the winner
+* \brief Show the winner of the game
+* \param p the board
 * \return Nothing
 */
-void show_winner();
+void show_winner(plateau);
+
+
+/**
+* \brief Show the winner of the current round
+* \param p the board
+* \return Nothing
+*/
+void show_winner_manche(plateau);
