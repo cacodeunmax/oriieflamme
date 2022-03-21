@@ -28,7 +28,7 @@ typedef struct couple {
 int hasRedrawn(faction);
 
 /**
-* \brief Make a faction redraw
+* \brief Make a faction redraw using \b clearhand and \b shuffle
 * \param f The faction that redraw
 * \return Nothing
 */
