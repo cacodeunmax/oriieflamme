@@ -1,10 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?><project name="Untitled Gantt Project" company="" webLink="http://" view-date="2022-03-03" view-index="0" gantt-divider-location="346" resource-divider-location="300" version="2.8.10" locale="fr">
+<?xml version="1.0" encoding="UTF-8"?><project name="Untitled Gantt Project" company="" webLink="http://" view-date="2022-03-21" view-index="0" gantt-divider-location="289" resource-divider-location="300" version="2.8.10" locale="fr">
     <description/>
     <view zooming-state="default:0" id="gantt-chart">
-        <field id="tpd3" name="Nom" width="182" order="0"/>
-        <field id="tpd4" name="Date de début" width="80" order="1"/>
-        <field id="tpd5" name="Date de fin" width="80" order="2"/>
+        <field id="tpd3" name="Nom" width="144" order="0"/>
+        <field id="tpd4" name="Date de début" width="71" order="1"/>
+        <field id="tpd5" name="Date de fin" width="70" order="2"/>
         <timeline><![CDATA[15]]></timeline>
+        <option id="color.recent"><![CDATA[#3366ff #ff6600 #ff6633 #ff33ff]]></option>
     </view>
     <view id="resource-table">
         <field id="0" name="Nom" width="210" order="0"/>
@@ -54,6 +55,39 @@
         <task id="6" name="a4" color="#8cb6ce" meeting="false" start="2022-03-04" duration="3" complete="100" thirdDate="2022-03-04" thirdDate-constraint="0" expand="true">
             <depend id="15" type="2" difference="0" hardness="Strong"/>
         </task>
+        <task id="17" name="b1" color="#8cb6ce" meeting="false" start="2022-04-01" duration="1" complete="66" thirdDate="2022-03-24" thirdDate-constraint="0" expand="true">
+            <task id="25" name="creer branche depot git" color="#ff6600" meeting="false" start="2022-04-01" duration="1" complete="100" thirdDate="2022-03-15" thirdDate-constraint="0" expand="true"/>
+            <task id="26" name="gant" color="#ff6633" meeting="false" start="2022-04-01" duration="1" complete="100" thirdDate="2022-03-15" thirdDate-constraint="0" expand="true"/>
+            <task id="27" name="faire make" color="#ff6600" meeting="false" start="2022-04-01" duration="1" complete="0" thirdDate="2022-03-15" thirdDate-constraint="0" expand="true"/>
+        </task>
+        <task id="18" name="b2 | test" color="#ff6600" meeting="false" start="2022-04-12" duration="2" complete="0" thirdDate="2022-03-03" thirdDate-constraint="0" expand="true"/>
+        <task id="19" name="b3 | structure" color="#3366ff" meeting="false" start="2022-04-04" duration="2" complete="0" thirdDate="2022-03-03" thirdDate-constraint="0" expand="true">
+            <task id="29" name="structure.h" color="#3366ff" meeting="false" start="2022-04-04" duration="1" complete="0" thirdDate="2022-03-21" thirdDate-constraint="0" expand="true">
+                <depend id="30" type="2" difference="0" hardness="Strong"/>
+            </task>
+            <task id="30" name="structure.c" color="#3366ff" meeting="false" start="2022-04-05" duration="1" complete="0" thirdDate="2022-03-21" thirdDate-constraint="0" expand="true">
+                <depend id="21" type="2" difference="0" hardness="Strong"/>
+            </task>
+        </task>
+        <task id="20" name="b4 | constante" color="#ff6600" meeting="false" start="2022-04-01" duration="1" complete="0" thirdDate="2022-03-03" thirdDate-constraint="0" expand="true">
+            <depend id="18" type="2" difference="0" hardness="Strong"/>
+            <depend id="19" type="2" difference="0" hardness="Strong"/>
+        </task>
+        <task id="21" name="b5 | implémentation des types" color="#3366ff" meeting="false" start="2022-04-06" duration="1" complete="0" thirdDate="2022-03-03" thirdDate-constraint="0" expand="true">
+            <depend id="18" type="2" difference="0" hardness="Strong"/>
+            <depend id="22" type="2" difference="0" hardness="Strong"/>
+            <depend id="23" type="2" difference="0" hardness="Strong"/>
+            <depend id="24" type="2" difference="0" hardness="Strong"/>
+        </task>
+        <task id="23" name="b7 | effet des cartes" color="#ff6600" meeting="false" start="2022-04-07" duration="3" complete="0" thirdDate="2022-03-03" thirdDate-constraint="0" expand="true">
+            <depend id="18" type="2" difference="0" hardness="Strong"/>
+        </task>
+        <task id="24" name="b8 | interface" color="#3366ff" meeting="false" start="2022-04-07" duration="1" complete="0" thirdDate="2022-03-03" thirdDate-constraint="0" expand="true">
+            <depend id="18" type="2" difference="0" hardness="Strong"/>
+        </task>
+        <task id="22" name="b6 | reste des fonctions des .c" color="#3366ff" meeting="false" start="2022-04-07" duration="1" complete="0" thirdDate="2022-03-03" thirdDate-constraint="0" expand="true">
+            <depend id="18" type="2" difference="0" hardness="Strong"/>
+        </task>
     </tasks>
     <resources>
         <resource id="0" name="Nathan" function="Default:0" contacts="" phone="">
@@ -66,6 +100,10 @@
     <allocations>
         <allocation task-id="4" resource-id="0" function="Default:0" responsible="true" load="100.0"/>
         <allocation task-id="6" resource-id="0" function="Default:0" responsible="true" load="100.0"/>
+        <allocation task-id="19" resource-id="0" function="Default:0" responsible="true" load="100.0"/>
+        <allocation task-id="21" resource-id="0" function="Default:0" responsible="true" load="100.0"/>
+        <allocation task-id="22" resource-id="0" function="Default:0" responsible="true" load="100.0"/>
+        <allocation task-id="24" resource-id="0" function="Default:0" responsible="true" load="100.0"/>
         <allocation task-id="3" resource-id="1" function="Default:0" responsible="true" load="100.0"/>
         <allocation task-id="5" resource-id="1" function="Default:0" responsible="true" load="100.0"/>
         <allocation task-id="11" resource-id="1" function="Default:0" responsible="true" load="100.0"/>
@@ -73,6 +111,10 @@
         <allocation task-id="15" resource-id="1" function="Default:1" responsible="false" load="100.0"/>
         <allocation task-id="16" resource-id="1" function="Default:0" responsible="true" load="100.0"/>
         <allocation task-id="10" resource-id="1" function="Default:0" responsible="true" load="100.0"/>
+        <allocation task-id="25" resource-id="1" function="Default:0" responsible="true" load="100.0"/>
+        <allocation task-id="17" resource-id="1" function="Default:0" responsible="true" load="100.0"/>
+        <allocation task-id="27" resource-id="1" function="Default:0" responsible="true" load="100.0"/>
+        <allocation task-id="20" resource-id="1" function="Default:0" responsible="true" load="100.0"/>
     </allocations>
     <vacations/>
     <previous/>
