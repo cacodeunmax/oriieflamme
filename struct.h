@@ -15,6 +15,8 @@ typedef struct carte {
     int function_number;
 } carte;
 
+
+
 /* pile de carte */
 typedef struct cartePioche{
   carte carte;
@@ -26,14 +28,20 @@ typedef struct hand{
     carte hand[hand_size];
 } hand; 
 
-/* nbr de point, main, redraw, nbr de victoire*/
+/* nbr de point, main, redraw, nbr de victoire, pioche*/
 typedef struct faction{
     int nb_point;
     hand hand;
     int redraw;
     int nb_v;
+    pioche* pioche;
 } faction;  
 
+/* couple de faction*/
+typedef struct couple {
+    faction fa;
+    faction fb;
+} couple;
 
 /* carte et bool sens */
 typedef struct cell{
