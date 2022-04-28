@@ -20,6 +20,18 @@
 
 typedef struct not_defined_plateau *plateau;
 
+int get_c_sens(plateau p, int x, int y);
+
+carte get_c_carte(plateau p, int x, int y);
+
+faction* get_c_fac(plateau p, int x, int y);
+
+void set_c_sens(plateau p, int x, int y, int s);
+
+void set_c_carte(plateau p, int x, int y, carte c);
+
+void set_c_fac(plateau p, int x, int y, faction* f);
+
 
 /**
 *\brief créer un nouveau plateau (et les deux factions qui joueront dessus))
