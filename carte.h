@@ -8,3 +8,8 @@
 */
 
 typedef struct not_defined_carte *carte;
+
+
+char* get_name(carte c);
+
+int get_func(carte c);
