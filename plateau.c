@@ -9,11 +9,36 @@
 #define MG 2
 
 /**
-* \file faction.h
+* \file plateau.c
 *
 * \author Nathan VETTER
 * Implémente les fonctions liées aux factions.
 */
+
+
+int get_c_sens(plateau p, int x, int y){
+    return p.plateau.cases[x][y].sens;
+}
+
+carte get_c_carte(plateau p, int x, int y){
+    return p.plateau.cases[x][y].carte;
+}
+
+faction* get_c_fac(plateau p, int x, int y){
+    return p.plateau.cases[x][y].fac;
+}
+
+void set_c_sens(plateau p, int x, int y, int s){
+    p.plateau.cases[x][y].sens = s;
+}
+
+void set_c_carte(plateau p, int x, int y, carte c){
+    p.plateau.cases[x][y].carte = c;
+}
+
+void set_c_fac(plateau p, int x, int y, faction* f){
+    p.plateau.cases[x][y].fac = f;
+}
 
 
 plateau create_plateau(){
@@ -131,10 +156,10 @@ int initialiser_manche(plateau* p, faction* f1, faction* f2){
         *f2= temp;
     }
 
-    int r = rand() % 2;
+    
 
     RAND:
-        
+        int r = rand() % 2;
         if (r){
             *f1 = p-> fa;
             *f2 = p-> fb;
