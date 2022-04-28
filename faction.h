@@ -20,6 +20,15 @@ typedef struct couple {
     faction fb;
 } couple;
 
+int get_point(faction f);
+
+int get_vic(faction f);
+
+void set_point(faction f, int p);
+
+void set_vic(faction f, int v);
+
+
 /**
 * \brief Check if a faction has already redrawn during the game
 * \param f The faction that is checked
