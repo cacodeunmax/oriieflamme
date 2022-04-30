@@ -1,5 +1,17 @@
-#define N 32
-#define hand_size 8
-#define deck_size 47
+#ifndef CONSTANTE_H
+#define CONSTANTE_H
 
-#define mg 2 
+
+#include "struct.h"
+
+#define N 32
+#define HAND_SIZE 8
+#define DECK_SIZE 47
+
+#define MG 2 
+
+const carte CN = { "null", -1, "carte nulle"};
+const faction FN = {};
+const cell CLN = {{"null", -1}, 0, &FN};
+
+#endif
