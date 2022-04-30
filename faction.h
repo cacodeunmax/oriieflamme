@@ -14,7 +14,7 @@
 * - draw(faction) qui permet à une faction de piocher 
 */
 
-typedef struct not_defined_faction *faction;
+typedef struct faction *faction;
 typedef struct couple {
     faction fa;
     faction fb;
@@ -28,13 +28,15 @@ void set_point(faction f, int p);
 
 void set_vic(faction f, int v);
 
+void add_point(faction f, int p);
+
 
 /**
 * \brief Check if a faction has already redrawn during the game
 * \param f The faction that is checked
 * \return The corresponding boolean
 */
-int hasRedrawn(faction);
+int has_redrawn(faction);
 
 /**
 * \brief Make a faction redraw using \b clearhand and \b shuffle
