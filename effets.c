@@ -30,35 +30,33 @@ carte null={"null",-1};
 /*------------------------------------------------------------------------------------*/
 /**
 *\brief active la carte fise
-*\param p un pointeur vers une faction
+*\param p une une faction
 *\return nothing 
 */
-void f_fise(faction *p){
-    ((*p).nb_point)++;
+void f_fise(faction p){
+  add_point(p,1);
 }
 
 /**
 *\brief active la carte fisa
-*\param p un pointeur vers une faction
-*\param m la grille
+*\param p une vers une faction
+*\param m le plateau
 *\return nothing 
 */
-void f_fisa(faction *p,grid m){
+void f_fisa(faction f,plateau p){
     int count=0;
     for (int i=0; i<N; i++){
         for (int j=0; j<N; j++){
-            cell current_cell=m.cases[i][j];
-            carte current_carte=current_cell.carte;
-            //if (current_cell.carte!=null)
-            if (!(strcmp(current_carte.name,"null")))
+            carte current_carte=get_c_carte(p,i,j);
+            if (!(equals(current_carte)))
              {
-                if (current_cell.sens==1){
+                if (get_c_sens(p,i,j)==1){
                     count++;
                 }
             }
     }
     if (count%2==0){
-        ((*p).nb_point)=((*p).nb_point) + 2;
+        add_point(f,2);
     }
     }
 }
@@ -68,46 +66,47 @@ void f_fisa(faction *p,grid m){
 
 /**
 *\brief active la carte fc
-*\param p un pointeur vers une faction
-*\param m la grille
+*\param p une faction
+*\param pl le plateau
 *\return nothing 
 */
-void f_fc(faction *p,grid m){
+void f_fc(faction p,plateau pl){
     
     int au_moins_1=0;
     for (int i=0; i<N; i++){
         for (int j=0; j<N; j++){
-            cell current_cell=m.cases[i][j];
-            carte current_carte=current_cell.carte;
-            if (strcmp(current_carte.name,"FC"))
-            /*if (current_cell.carte.name!="null")*/
+            carte current_carte=get_c_carte(pl,i,j);
+
+            if (equals(current_carte,"FC"))
             {
-                if (current_cell.sens==1){
-                ((*p).nb_point)=((*p).nb_point) + 4;
+                if (get_c_sens(pl,i,j)==1){
+
+                pt=pt+4;
+                set_point(p,pt);
                 au_moins_1=1;
                 break;}
             }
-            /*if (au_moins_1==1){
-                break;}*/
         }
     if (au_moins_1==1){break;}}
 }
 
 /**
 *\brief active la carte ecologiie
-*\param p un pointeur vers une faction
-*\param m la grille
+*\param p une faction
+*\param m le plateau
 *\return nothing 
 */
-void f_ecologiie(faction *p,grid m){
+void f_ecologiie(faction p,plateau m){
     for (int i=0; i<N; i++){
         for (int j=0; j<N; j++){
-            cell current_cell=m.cases[i][j];
-            carte current_carte=current_cell.carte;
-            if (strcmp(current_carte.name,"FC")||strcmp(current_carte.name,"FISE")||strcmp(current_carte.name,"FISA"))
+            carte current_carte=get_c_carte(m,i,j)
+            if (equals(current_carte,"FC")||equals(current_carte,"FISE")||equals(current_carte,"FISA"))
             {
-                if (current_cell.sens==1){
-                ((*p).nb_point)++;}    
+                if ((get_c_sens(m,i,j))==1){
+                int h=get_point(p);
+                h++;
+                set_point(p,h);
+                }    
             }
         }
     }
@@ -139,21 +138,23 @@ void randomize(carte arr[], int n) {
 
 /**
 *\brief fonction auxilière a la fonction qui active la carte liien, elle pose la carte c à la gauche de la carte la plus en haut à gauche du plateau
-*\param p un pointeur vers une faction
-*\param m la grille
+*\param p une faction
+*\param m le plateau
 *\param c une carte
 *\return nothing 
 */
-void haut_gauche(grid m,carte c, faction *f){
+void haut_gauche(plateau m,carte c, faction f){
     for (int i=0; i<N; i++){
         for (int j=0; j<N; j++){
-            cell current_cell=m.cases[i][j];
+           
 
-            int current_sens=current_cell.sens;
+            int current_sens=get_c_sens(m,i,j)
             /*carte current_carte=current_cell.carte;*/
             /* le cas current_sens==1 et i=0 n'est pas possible*/
             if (current_sens==1){
-                m.cases[i-1][j]=(cell) {c,0,f};
+                //m.cases[i-1][j]=(cell) {c,0,f};
+                put_card(*m,c,*f,i,j);
+
                 break;
             }
         }
@@ -163,11 +164,11 @@ void haut_gauche(grid m,carte c, faction *f){
 
 /**
 *\brief active la carte liiens
-*\param p un pointeur vers une faction
-*\param m la grille
+*\param p une faction
+*\param m le plateau
 *\return nothing 
 */
-void f_liiens(faction *p,grid m){
+void f_liiens(faction p,plateau m){
 
     carte cartes_retirees[hand_size*2];
     for (int k=0; k<(hand_size*2); k++){
@@ -175,18 +176,19 @@ void f_liiens(faction *p,grid m){
     }
     for (int i=0; i<N; i++){
         for (int j=0; j<N; j++){
-            cell current_cell=m.cases[i][j];
-            carte current_carte=current_cell.carte;
-            int current_sens=current_cell.sens;
-            if (  (strcmp(current_carte.name,"FC")||strcmp(current_carte.name,"FISE")||strcmp(current_carte.name,"FISA"))&&(current_sens==1))
+
+            carte current_carte=get_c_carte(p,i,j);
+            int current_sens=get_c_sens(p,i,j);
+            if (  (equals(current_carte,"FC"))||equals(current_carte,"FISE")||equals(current_carte,"FISA"))&&(current_sens==1))
             {
                 carte cc=current_carte;
                 //cell cellule ={null,-1,NULL};
-                m.cases[i][j]=(cell) {null,-1,NULL};
+             
+                set_c_nulle(p,i,j);
 
                 for (int k=0; k<(hand_size*2); k++){
 
-                    if     ( equals_carte((cartes_retirees[k]),    null )){
+                    if     ( equals(current_carte,"Café")(cartes_retirees[k])){
                         cartes_retirees[k]=cc;
                         break;}
                 }
@@ -207,18 +209,17 @@ void f_liiens(faction *p,grid m){
 /**
 *\brief active les effets de la carte soirée sans alcool
 
-*\param m la grille
+*\param m le plateau
 *\return nothing 
 */
-void f_ssa(/*faction *p,*/grid m){
+void f_ssa(/*faction p,*/plateau m){
     
     //etape 1
     int oui_alcool=0;
     for (int i=0; i<N; i++){
         for (int j=0; j<N; j++){
-            cell current_cell=m.cases[i][j];
-            carte current_carte=current_cell.carte;
-            if (strcmp(current_carte.name,"alcool")){
+            carte current_carte = get_c_carte(m,i,j);
+            if (equals(current_carte,"alcool")){
                 oui_alcool=1;
                 break;
             }
@@ -229,23 +230,38 @@ void f_ssa(/*faction *p,*/grid m){
 
     if (oui_alcool==1){
     //etape 2
-    for (int i=1; i<(N-1); i++){
+    //on cherches les cartes, et on cherche aussi l'indice de la première ligne et de la dernière ligne
+    int fst=-1;
+    int lst=-1;
+
+    for (int i=0; i<(N-1); i++){
         for (int j=0; j<N; j++){
-            cell current_cell=m.cases[i][j];
-            carte current_carte=current_cell.carte;
-            int current_sens=current_cell.sens;
-            if (  (strcmp(current_carte.name,"FC")||strcmp(current_carte.name,"FISE")||strcmp(current_carte.name,"FISA"))&&(current_sens==1))
+            carte current_carte = get_c_carte(m,i,j);
+            int current_sens=get_c_sens(m,i,j);
+            if (  (equals(current_carte,"FC"))||equals(current_carte,"FISE")||equals(current_carte,"FISA"))&&(current_sens==1))
             {
                 //cell cellule ={null,-1,NULL};
-                m.cases[i][j]=(cell) {null,-1,NULL};
+                //set_c_nulle(m,i,j);
+                set_c_nulle(m,i,j);
+            }
+
+
+            current_carte = get_c_carte(m,i,j);
+            current_sens=get_c_sens(m,i,j);
+            if ((current_sens==1)&&(!(equals(current_carte))){
+                lst=i;
+                if (fst==-1){fst=i;}
             }
         }
     }
 
     //etape 3 
+
     for (int j=0; j<N; j++){
-        m.cases[0][j]=(cell) {null,-1,NULL};
-        m.cases[N-1][j]=(cell) {null,-1,NULL};
+        set_c_nulle(m,fst,j);
+        set_c_nulle(m,lst,j);
+        //m.cases[0][j]=(cell) {null,-1,NULL};
+        //m.cases[N-1][j]=(cell) {null,-1,NULL};
     }
     }
 
@@ -253,10 +269,10 @@ void f_ssa(/*faction *p,*/grid m){
 /**
 *\brief active les effets de la carte alcool
 
-*\param m la grille
+*\param m le plateau
 *\return nothing 
 */
-void f_alcool(grid m, int i, int j){
+void f_alcool(plateau m, int i, int j){
 
 
     /* avec l'implémenation qu'on à on est jamais au bord du plateau*/
@@ -264,63 +280,66 @@ void f_alcool(grid m, int i, int j){
     m.cases[i+1][j]=(cell) {null,-1,NULL};
     m.cases[i][j-1]=(cell) {null,-1,NULL};
     m.cases[i][j+1]=(cell) {null,-1,NULL};
+    set_c_nulle(m,(i-1),j);
+    set_c_nulle(m,(i+1),j);
+    set_c_nulle(m,i,(j-1));
+    set_c_nulle(m,i,(j+1));
 
 }
 /**
 *\brief active les effets de la carte café
-*\param p un pointeur vers une faction
-*\param m la grille
+*\param p une faction
+*\param m le plateau
 *\return nothing 
 */
-void f_cafe(faction *p,grid m){
+void f_cafe(faction p,plateau m){
     int eco;
-   for (int i=1; i<N; i++){
+   for (int i=0; i<N; i++){
         for (int j=0; j<N; j++){
-            cell current_cell=m.cases[i][j];
-            carte current_carte=current_cell.carte;
-            int current_sens=current_cell.sens;
-            if (((strcmp(current_carte.name,"Thé")||strcmp(current_carte.name,"Alcool"))&&(current_sens==1))){
-                m.cases[i][j]=(cell) {null,-1,NULL};
+            carte current_carte = get_c_carte(m,i,j);
+            int current_sens=get_c_carte(m,i,j)
+            if (((equals(current_carte,"Thé"||equals(current_carte,"Alcool")&&(current_sens==1))){
+                //set_c_nulle(m,i,j);
+                set_c_nulle(p,i,j);
             }
-            if ((strcmp(current_carte.name,"Ecocup")&&(current_sens==1))){
-                ((*p).nb_point)++;
+            if ((equals(current_carte,"Ecocup")&&(current_sens==1))){
+                add_point(p,1);
                 eco++;
             }
         }
     }
     if (eco==0){
-        ((*p).nb_point=((*p).nb_point) - 1);
+        add_point(p,(-1));
     }
 }
 /**
 *\brief active les effets de la carte thé
-*\param p un pointeur vers une faction
-*\param m la grille
+*\param p une faction
+*\param m le plateau
 *\return nothing 
 */
-void f_the(faction *p,grid m){
-    int eco;
-   for (int i=1; i<N; i++){
+void f_the(faction p,plateau m){
+int eco;
+   for (int i=0; i<N; i++){
         for (int j=0; j<N; j++){
-            cell current_cell=m.cases[i][j];
-            carte current_carte=current_cell.carte;
-            int current_sens=current_cell.sens;
-            if (((strcmp(current_carte.name,"Café")||strcmp(current_carte.name,"Alcool"))&&(current_sens==1))){
-                m.cases[i][j]=(cell) {null,-1,NULL};
+            carte current_carte = get_c_carte(m,i,j);
+            int current_sens=get_c_sens(m,i,j);
+            if (((equals(current_carte,"Café")||equals(current_carte,"Alcool")&&(current_sens==1))){
+                set_c_nulle(m,i,j);
             }
-            if ((strcmp(current_carte.name,"Ecocup")&&(current_sens==1))){
-                ((*p).nb_point)++;
+            if ((equals(current_carte,"Ecocup"&&(current_sens==1))){
+                add_point(p,1);
                 eco++;
             }
         }
     }
     if (eco==0){
-        ((*p).nb_point=((*p).nb_point) - 1);
+        add_point(p,(-1));
     }
 }
 
 /*
-void f_reprographie(faction* p, faction *q, grid m){
+void f_reprographie(faction p, faction *q, plateau m){
     liste_double lst;
     
 
@@ -330,38 +349,46 @@ void f_isolation(){
 }
 /**
 *\brief active les effets de la carte sobriété
-*\param p un pointeur vers une faction
-*\param m la grille
+*\param p une faction
+*\param m le plateau
 *\return nothing 
 */
-void f_sobriete(grid m){
+void f_sobriete(plateau m){
 
-    for (int i=1; i<N; i++){
-    
-        cell current_cell=m.cases[i][1];
-        carte current_carte=current_cell.carte;
-        m.cases[i][1]=(cell) {current_carte,1,current_cell.fac};
+    for (int i=0; i<N; i++){
+        int jg=-1;
+        int jd=-1;
 
-        current_cell=m.cases[i][(N-1)];
-        current_carte=current_cell.carte;
-        m.cases[i][(N-1)]=(cell) {current_carte,1,current_cell.fac};
-    }
+        for (int j=0; j<N; j++){
+            carte current_carte=get_c_carte(m,i,j);
+            int sens=get_c_sens(m,i,j);
+            if( (!(equals(current_carte)))&&(jg=-1) ){
+                jg=j;
+            }
+            if(!(equals(current_carte))){
+                jd=j;
+            }
+        }
+    set_c_sens(m,i,jg,1);
+    set_c_sens(m,i,jd,1);
+    } 
 }
 
 /**
 *\brief active les effets de la carte heures supplémentaires
-*\param p un pointeur vers une faction
-*\param m la grille
+*\param p une faction
+*\param m le plateau
 *\return nothing 
 */
-void f_heure(faction *adv,grid m){
+void f_heure(faction p,plateau m){
+
     for (int i=1; i<N; i++){
         for (int j=0; j<N; j++){
-            cell current_cell=m.cases[i][j];
-            carte current_carte=current_cell.carte;
-            int current_sens=current_cell.sens;
-            if ((strcmp(current_carte.name,"Heures supplémentaires")&&(current_sens==1))){
-                ((*adv).nb_point)=((*adv).nb_point)-3;
+            carte current_carte = get_c_carte(m,i,j);
+            int current_sens=get_c_sens(m,i,j);
+            if ((equals(current_carte,"Heures supplémentaires")&&(current_sens==1))){
+                faction adv=get_adverse(m,f);
+                add_point(adv,(-3));
             }
         }
     }
@@ -369,8 +396,8 @@ void f_heure(faction *adv,grid m){
 
 /**
 *\brief returns a pseudo-random value between 0 and max included
-*\param p un pointeur vers une faction
-*\param m la grille
+*\param p une faction
+*\param m le plateau
 *\return nothing 
 */
 int rand_up_to(int max) {
@@ -385,67 +412,64 @@ int rand_up_to(int max) {
 
 /**
 *\brief active les effets de la carte Kahina Bouchama
-*\param p un pointeur vers une faction
-*\param m la grille
+*\param p une faction
+*\param m le plateau
 *\return nothing 
 */
-void f_KH(faction *p,grid m){
+void f_KB(faction p,plateau m){
     int i=0;
     int j=0;
     int current_sens=1;
-    int var=0;
+    int var=1;
 
     while ((current_sens==0)||(var==0)){
         i =rand_up_to(N-1);
         j=rand_up_to(N-1);
-        cell current_cell=m.cases[i][j];
-        carte current_carte=current_cell.carte;
-        int current_sens=current_cell.sens;
-        int var=strcmp(current_carte.name,"null");
+        carte current_carte=get_c_carte(m,i,j);
+        int current_sens=get_c_sens(m,i,j);
+        int var=empty(current_carte);
     }
-    if ((current_sens==1)&&(var!=0))
+    if ((current_sens==1)&&(!(var)))
     {
-        m.cases[i][j]=(cell) {null,-1,NULL};
+        set_c_nulle(m,i,j);
     }
-
-
+}
 ;
 
 /**
 *\brief active les effets de la carte Kevin Goilard
-*\param p un pointeur vers une faction
-*\param m la grille
+*\param p une faction
+*\param m le plateau
 *\return nothing 
 */
-void f_KH(faction *p,grid m){
+void f_KH(faction p,plateau m){
     int count=0;
 
     while(count==0){
         int i =rand_up_to(N-1);
         for (int j=0; j<N; j++){
 
-            cell current_cell=m.cases[i][j];
-            carte current_carte=current_cell.carte;
-            if (!(strcmp(current_carte.name,"null"))){
+            carte current_carte = get_c_carte(m,i,j);
+            if (!(empty(current_carte))){
                 count++;
-                m.cases[i][j]=(cell) {null,-1,NULL};
+                set_c_nulle(m,i,j);
             }
         }
     }
 
-    ((*p).nb_point)=((*p).nb_point) - 2*count;
+    add_point(p,(-2*count));
 }
 
 
 
 /**
 *\brief active l'effet de la carte Merabet 
-*\param p un pointeur vers une faction
-*\param m la grille
+*\param p une faction
+*\param m le plateau
 *\param c la dernière carte qui a été retournée 
 *\return nothing 
 */
-void f_MM(faction *p,grid m, carte c){}
+void f_MM(faction p,plateau m, carte c){}
 
 
 
@@ -458,21 +482,20 @@ void f_MM(faction *p,grid m, carte c){}
 
 /**
 *\brief active l'effet de la carte Jonas Senizergues
-*\param p un pointeur vers une faction
-*\param m la grille
+*\param p une faction
+*\param m le plateau
 *\param c la dernière carte qui a été retournée 
 *\return nothing 
 */
 
-void f_JS(faction *p,grid m){
+void f_JS(faction p,plateau m){
 
    for (int i=1; i<N; i++){
         for (int j=0; j<N; j++){
-            cell current_cell=m.cases[i][j];
-            carte current_carte=current_cell.carte;
-            int current_sens=current_cell.sens;
-            if (((strcmp(current_carte.name,"Heures supplémentaires")&&(current_sens==1)))){
-                m.cases[i][j]=(cell) {null,-1,NULL};
+            carte current_carte = get_c_carte(m,i,j);
+            int current_sens=get_c_sens(m,i,j);
+            if (((equals(current_carte,"Heures supplémentaires")&&(current_sens==1)))){
+                set_c_nulle(m,i,j);
             }
         }
    }
@@ -485,24 +508,23 @@ void f_JS(faction *p,grid m){
 
 /**
 *\brief active l'effet de la carte Fetia Bannour
-*\param p un pointeur vers une faction
-*\param m la grille
+*\param p une faction
+*\param m le plateau
 *\param c la dernière carte qui a été retournée 
 *\return nothing 
 */
 
-void f_FB(faction *p,grid m){
+void f_FB(faction p,plateau m){
 
    for (int i=0; i<N; i++){
         for (int j=0; j<N; j++){
-            cell current_cell=m.cases[i][j];
-            carte current_carte=current_cell.carte;
-            int current_sens=current_cell.sens;
-            if (((strcmp(current_carte.name,"Heures supplémentaires")&&(current_sens==1)))){
+            carte current_carte = get_c_carte(m,i,j);
+            int current_sens=get_c_sens(m,i,j);
+            if (((equals(current_carte,"Heures supplémentaires")&&(current_sens==1)))){
                 
                 for (int k=0; k<N;k++){
-                    m.cases[i][k]=(cell) {null,-1,NULL};
-                    m.cases[k][j]=(cell) {null,-1,NULL};
+                    set_c_nulle(m,i,k);
+                    set_c_nulle(m,k,j);
                 }
             }
         }
@@ -514,74 +536,74 @@ void f_FB(faction *p,grid m){
 
 /**
 *\brief active l'effet de la carte Catherine Dubois
-*\param p un pointeur vers une faction
-*\param m la grille
+*\param p une faction
+*\param m le plateau
 *\param c la dernière carte qui a été retournée 
 *\return nothing 
 */
 
-void f_CD(faction *p,grid m, int i, int j){
+void f_CD(faction p,plateau m, int i, int j){
     int il=i;
     int jl;
     int ic;
     int jc=j;
     for (int k=0; i<N; i++){
-        cell current_cell=m.cases[i][k];
-        carte current_carte=current_cell.carte;
-        int current_sens=current_cell.sens;
-        if (( (!strcmp(current_carte.name,"null"))&&(current_sens==1))){
+        
+        carte current_carte=get_c_carte(m,i,k);
+        int current_sens=get_c_sens(m,i,k);
+        if (( (!empty(current_carte))&&(current_sens==1))){
             jl=k;
         }
-        current_cell=m.cases[k][j];
-        current_carte=current_cell.carte;
-        current_sens=current_cell.sens;
-        if (( (!strcmp(current_carte.name,"null"))&&(current_sens==1))){
+       
+        current_carte=get_c_carte(m,k,j);
+        current_sens=get_c_sens(m,k,j);
+        if (( (!empty(current_carte))&&(current_sens==1))){
             ic=k;
   
         }
     }
-    m.cases[ic][jc]=(cell) {null,-1,NULL};
-    m.cases[il][jl]=(cell) {null,-1,NULL};
+    //m.cases[ic][jc]=(cell) {null,-1,NULL};
+    //m.cases[il][jl]=(cell) {null,-1,NULL};
+    set_c_nulle(m,ic,jc);
+    set_c_nulle(m,il,jl);
 
 }
 
         
 
 
-void supprime_last(grid m){
+void supprime_last(plateau m){
     int x;
     int y;
     for (int i=0; i<N; i++){
             for (int j=0; j<N; j++){
-                cell current_cell=m.cases[i][j];
-                carte current_carte=current_cell.carte;
-                int current_sens=current_cell.sens;
-                if (( (!strcmp(current_carte.name,"null"))&&(current_sens==1))){
+               current_carte=get_c_carte(m,i,j); 
+               int current_sens=get_c_sens(m,i,j);
+                if (( (!empty(current_carte))&&(current_sens==1))){
                     x=i;
                     y=j; 
                 }
             }
     }
-    m.cases[x][y]=(cell) {null,-1,NULL};         
+    set_c_nulle(m,x,y);       
 }     
 
 /**
 *\brief active l'effet de la carte Anne-Laure Ligozat
-*\param p un pointeur vers une faction
-*\param m la grille
+*\param p une faction
+*\param m le plateau
 *\param c la dernière carte qui a été retournée 
 *\return nothing 
 */
 
-void f_ALL(faction *p,grid m){
+void f_ALL(faction p,plateau m){
 
    for (int i=0; i<N; i++){
         for (int j=0; j<N; j++){
-            cell current_cell=m.cases[i][j];
-            carte current_carte=current_cell.carte;
-            int current_sens=current_cell.sens;
-            if (  (strcmp(current_carte.name,"EcologIIE")||strcmp(current_carte.name,"parcours Sobriété numérique")||strcmp(current_carte.name,"Ecocup")||strcmp(current_carte.name,"Isolation du bâtiment"))&&(current_sens==1)){
-                ((*p).nb_point)=((*p).nb_point) + 3;
+            carte current_carte = get_c_carte(m,i,j);
+            int current_sens=get_c_sens(m,i,j);
+            if (  (equals(current_carte,"EcologIIE"))||equals(current_carte,"parcours Sobriété numérique")||equals(current_carte,"Ecocup"||strcmp(current_carte.name,"Isolation du bâtiment"))&&(current_sens==1)){
+               add_point(p,3);
                 supprime_last(m);
             }
         }
@@ -590,36 +612,35 @@ void f_ALL(faction *p,grid m){
 
 /**
 *\brief active l'effet de la carte Guillaume burel
-*\param p un pointeur vers une faction
+*\param p une faction
 
-*\param q un pointeur vers une faction
-*\param m la grille
+*\param q une faction
+*\param m le plateau
 *\return nothing 
 */
 
-void f_ALL(faction *p,faction *q){
-    
-    if (((*p).nb_point)>=((*q).nb_point)){
-        ((*q).nb_point)=((*q).nb_point) + 3;
-        ((*p).nb_point)=((*p).nb_point)-3;
+void f_ALL(faction p){
+    faction q=get_adverse(p);
+    if (get_point(p)>=get_point(q)){
+        add_point(p,3);
+        add_point(q,(-3));
     }
 }
 
 /**
 *\brief active l'effet de la carte Christophe Mouilleron
 
-*\param m la grille
+*\param m le plateau
 *\return nothing 
 */
 
-void f_CM(grid m){
+void f_CM(plateau m){
     int trouve=0;
     for (int i=0; i<N; i++){
         for (int j=0; j<N; j++){
-            cell current_cell=m.cases[i][j];
-            carte current_carte=current_cell.carte;
-            int current_sens=current_cell.sens;
-            if (((strcmp(current_carte.name,"Heures supplémentaires")&&(current_sens==1)))){
+            carte current_carte = get_c_carte(m,i,j);
+            int current_sens=get_c_sens(m,i,j);
+            if (((equals(current_carte,"Heures supplémentaires")&&(current_sens==1)))){
                 trouve=1;
                 break;
             }
@@ -631,11 +652,10 @@ void f_CM(grid m){
     if (trouve==1){
         for (int i=0; i<N; i++){
         for (int j=0; j<N; j++){
-            cell current_cell=m.cases[i][j];
-            carte current_carte=current_cell.carte;
-            int current_sens=current_cell.sens;
-            if (  (!strcmp(current_carte.name,"Christophe Mouilleron")||!strcmp(current_carte.name,"Heures supplémentaires"))&&(current_sens==1)){
-                 m.cases[i][j]=(cell) {null,-1,NULL};    
+            carte current_carte = get_c_carte(m,i,j);
+            int current_sens=get_c_sens(m,i,j);
+            if (  (!strcmp(current_carte.name,"Christophe Mouilleron")||!equals(current_carte,"Heures supplémentaires"))&&(current_sens==1)){
+                 set_c_nulle(m,i,j);    
             }
         }
         }
@@ -649,34 +669,34 @@ void f_CM(grid m){
 *\brief active l'effet de la carte Thomas LIM 
 *\param p un pointeur vers la faction qui pose la carte
 *\param q un pointeur vers la faction adverse
-*\param m la grille
+*\param m le plateau
 *\return nothing 
 */
 
-void f_TM(faction *p,faction* q, grid m){
+void f_TM(faction p, plateau m){
     int forest;
     int cfise;
+    faction q=get_adverse(p);
     
-    //premières boucles sur la grille, on cherche forest
+    //premières boucles sur le plateau, on cherche forest
     for (int i=0; i<N; i++){
         for (int j=0; j<N; j++){
-            cell current_cell=m.cases[i][j];
-            carte current_carte=current_cell.carte;
-            int current_sens=current_cell.sens;
+            carte current_carte = get_c_carte(m,i,j);
+            int current_sens=get_c_sens(m,i,j);
             if (  (strcmp(current_carte.name,"Julien Forest")&&(current_sens==1))){
             forest=1;
             }
-            if (  (strcmp(current_carte.name,"FISE")&&(current_sens==1))){
+            if (  (equals(current_carte,"FISE")&&(current_sens==1))){
             cfise++;
             }
         }
     }
     if (forest!=1){
-        ((*p).nb_point)=((*p).nb_point) +3*cfise;
-    
+        //((p).nb_point)=((p).nb_point) +3*cfise;
+        add_point(p,(3*cfise));
     }
     else{
-        ((*q).nb_point)=((*q).nb_point) -cfise;
+        add_point(q,(-cfise));
     }
 }
 
@@ -686,59 +706,57 @@ void f_TM(faction *p,faction* q, grid m){
 /**
 *\brief active l'effet de la carte Julien Forest
 *\param p un pointeur vers la faction qui pose la carte
-*\param m la grille
+*\param m le plateau
 *\return nothing 
 */
-void f_JF(faction *p, grid m){
+void f_JF(faction p, plateau m){
     int cafe;
     int cfise=0;
     
-    //premières boucles sur la grille, on cherche forest
+    //premières boucles sur le plateau, on cherche forest
     for (int i=0; i<N; i++){
         for (int j=0; j<N; j++){
-            cell current_cell=m.cases[i][j];
-            carte current_carte=current_cell.carte;
-            int current_sens=current_cell.sens;
-            if (  (strcmp(current_carte.name,"Café")&&(current_sens==1))){
+            carte current_carte = get_c_carte(m,i,j);
+            int current_sens=get_c_sens(m,i,j);
+            if (  (equals(current_carte,"Café")&&(current_sens==1))){
                 cafe=1;
             }
-            if (  (strcmp(current_carte.name,"FISE")&&(current_sens==1))){
+            if (  (equals(current_carte,"FISE")&&(current_sens==1))){
                 cfise++;
             }
         }
     }
     if (cafe==1){
-        ((*p).nb_point)=((*p).nb_point) +6*cfise;}
+        add_point(p,(6*cfise));
 }
     
 /**
 *\brief active l'effet de la carte Dimitri Watel
 *\param p un pointeur vers la faction qui pose la carte
-*\param m la grille
+*\param m le plateau
 *\return nothing 
 */
-void f_DW(faction *p, grid m){
+void f_DW(faction p, plateau m){
     int the;
     int count=0;   
-    //premières boucles sur la grille, on cherche forest
+    //premières boucles sur le plateau, on cherche forest
     for (int i=0; i<N; i++){
         for (int j=0; j<N; j++){
-            cell current_cell=m.cases[i][j];
-            carte current_carte=current_cell.carte;
-            int current_sens=current_cell.sens;
-            if ( (strcmp(current_carte.name,"FISE"))&&(current_sens==1))){
+            carte current_carte = get_c_carte(m,i,j);
+            int current_sens=get_c_sens(m,i,j);
+            if ( (equals(current_carte,"FISE"))&&(current_sens==1))){
                 count++;
             }
-            if ( (strcmp(current_carte.name,"FC"))&&(current_sens==1))){
+            if ( (equals(current_carte,"FC")))&&(current_sens==1))){
                 count++;
             }
-            if (  (strcmp(current_carte.name,"Thé")&&(current_sens==1))){
+            if (  (equals(current_carte,"Thé"&&(current_sens==1))){
                 the=1;
             }
         }
     }
     if (the==1){
-        ((*p).nb_point)=((*p).nb_point) +3*count;}
+        add_point(p,(3*count));
 }
 
 
@@ -749,18 +767,18 @@ void f_DW(faction *p, grid m){
 /**
 *\brief active l'effet de la carte Djibril-Aurélien Dembele-Cabot
 *\param p un pointeur vers la faction qui pose la carte
-*\param m la grille
+*\param m le plateau
 *\param x l'entier numéro de ligne de la carte
 *\return nothing 
 */
 
-void f_DW(faction *p, grid m, int x){
+void f_DW(faction p, plateau m, int x){
     int count=0;   
-    //premières boucles sur la grille, on cherche forest
+    //premières boucles sur le plateau, on cherche forest
     for (int j=0; j<N; j++){
-        cell current_cell=m.cases[x][j];
-        carte current_carte=current_cell.carte;
-        int current_sens=current_cell.sens;
+    
+        carte current_carte=get_c_carte(m,x,j);
+        int current_sens=get_c_sens(m,x,j);
         if (current_sens==1){
             count++;
         }
@@ -769,7 +787,7 @@ void f_DW(faction *p, grid m, int x){
         }
     }
     if (count>=3){
-        ((*p).nb_point)=((*p).nb_point) +3*count;
+        add_point(p,(3*count));
     }
 }
     
@@ -777,7 +795,7 @@ void f_DW(faction *p, grid m, int x){
 /**
 *\brief active l'effet de la carte Eric Lejeune
 *\param p un pointeur vers la faction qui pose la carte
-*\param m la grille
+*\param m le plateau
 *\param x l'entier numéro de ligne de la carte
 *\return nothing 
 */
@@ -791,35 +809,34 @@ void f_DW(faction *p, grid m, int x){
 /**
 *\brief active l'effet de la carte Lucienne Pacavé
 *\param p un pointeur vers la faction qui pose la carte
-*\param m la grille
+*\param m le plateau
 *\param x l'entier numéro de ligne de la carte
 *\param y l'entier numéro de colonne de la carte
 *\return nothing 
 */
 
-void f_LP(grid m, int x, int y, faction* p){
-    cell current_cell;
+void f_LP(plateau m, int x, int y, faction p){
+
     carte current_carte;
     int current_sens; 
     int fisa=0;
     for (int k=0; j<N; j++){
-        current_cell=m.cases[x][k];
-        current_carte=current_cell.carte;
-        current_sens=current_cell.sens;
-        if ( (strcmp(current_carte.name,"FISA"))&&(current_sens==1))){
+        
+        current_carte=get_c_carte(m,x,k);
+        current_sens=get_c_sens(m,x,k);
+        if ( (equals(current_carte,"FISA"))&&(current_sens==1))){
             fisa++;
             break;
         }
 
-        current_cell=m.cases[k][y];
-        current_carte=current_cell.carte;
-        current_sens=current_cell.sens;
-        if ( (strcmp(current_carte.name,"FISA"))&&(current_sens==1))){
+         current_carte=get_c_carte(m,k,y);
+        current_sens=get_c_sens(m,y,k);
+        if ( (equals(current_carte,"FISA"))&&(current_sens==1))){
             fisa++;
             break;
         }
     }
-    /*if (fisa>=1){
-        //ajouter 5 pts à p
-    }*/
+    if (fisa>=1){
+        add_point(p,5);
+    }
 }
