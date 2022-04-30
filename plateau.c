@@ -1,12 +1,14 @@
+#ifndef PLATEAU_C
+#define PLATEAU_C
+
 #include "struct.c"
-#include "struct.h"
+#include <string.h>
 #include <stddef.h>
 #include <stdlib.h>
 #include "faction.c"
-#include <string.h>
+#include "struct.h"
+#include "constante.h"
 
-#define HAND_SIZE 8
-#define MG 2
 
 /**
 * \file plateau.c
@@ -22,6 +24,18 @@ int get_c_sens(plateau p, int x, int y){
 
 carte get_c_carte(plateau p, int x, int y){
     return p.plateau.cases[x][y].carte;
+}
+
+faction get_adverse(plateau p, faction f){
+    if (&p.fa == &f){
+        return p.fb;
+    } else {
+        return p.fa;
+    }
+}
+
+void set_c_nulle (plateau p, int x, int y){
+    p.plateau.cases[x][y] = CLN;
 }
 
 faction* get_c_fac(plateau p, int x, int y){
@@ -45,16 +59,9 @@ plateau create_plateau(){
     plateau p;
     p.plateau = grid_create(31);
     int i, j;
-    cell cl;
-    carte c;
-    c.name="null";
-    faction* fn;
-    cl.carte = c;
-    cl.sens=0;
-    cl.fac = fn;
     for (i = 0; i<p.plateau.size; i++){
         for (j=0; j< p.plateau.size; j++){
-            p.plateau.cases[i][j]=cl;
+            p.plateau.cases[i][j]=CLN;
         }
     }
 
@@ -101,21 +108,23 @@ void put_card(plateau *p,carte c, faction *f, int x,int y){
 carte flip_card(plateau *p){
     int i, j;
     carte c;
-    c.name= "null";
+    c = CN;
+
     faction *f;
     for (i = 0; i <31; i++){
         for (j=0; j< 31; j++){
-            if ((!strcmp(p-> plateau.cases[i][j].carte.name, "null"))&&(p-> plateau.cases[i][j].sens)){
+           if ( !strcmp(c.name, "null")){
+                break;
+            } 
+            if ((!strcmp(p-> plateau.cases[i][j].carte.name, "null"))&&(!p-> plateau.cases[i][j].sens)){
+                p-> plateau.cases[i][j].sens = 1;
                 c = p-> plateau.cases[i][j].carte;
                 f = p-> plateau.cases[i][j].fac;
                 break;
             }
-            if ( !strcmp(c.name, "null")){
-                break;
-            }
         }
     }
-    connec_carte(*p, f, c.function_number);
+    //connec_carte(*p, f, c.function_number);
     return c;
 }
 
@@ -142,13 +151,13 @@ void victory_manche(plateau* p){
 }
 
 int initialiser_manche(plateau* p, faction* f1, faction* f2){
-    if (*f1 = fn){
-        goto RAND;
-    }
-    else if ((f1-> nb_point + f2 -> nb_point)%2){
+    if (f1 == &FN){
         goto RAND;
     } else if ((f1 -> nb_v == MG) || (f2 -> nb_v == MG)){
         return 1;
+    
+    }else if (!(f1-> nb_point + f2 -> nb_point)%2){
+        goto RAND;
 
     } else {
         faction temp = *f1;
@@ -158,7 +167,7 @@ int initialiser_manche(plateau* p, faction* f1, faction* f2){
 
     
 
-    RAND:
+    RAND:;
         int r = rand() % 2;
         if (r){
             *f1 = p-> fa;
@@ -180,3 +189,7 @@ int initialiser_manche(plateau* p, faction* f1, faction* f2){
     p-> plateau = grid_create( 4* HAND_SIZE - 1);
     return 0;
 }
+
+
+
+#endif
