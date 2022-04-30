@@ -32,6 +32,10 @@ void set_c_carte(plateau p, int x, int y, carte c);
 
 void set_c_fac(plateau p, int x, int y, faction* f);
 
+void set_c_nulle (plateau p, int x, int y);
+
+void add_point(faction f, int p);
+
 
 /**
 *\brief créer un nouveau plateau (et les deux factions qui joueront dessus))
@@ -44,7 +48,7 @@ plateau create_plateau();
 *\brief libérer la mémoire associée à un plateau (et ses deux factions)
 *\return nothing 
 */
-void free_plateau();
+void free_plateau(plateau p);
 
 
 
