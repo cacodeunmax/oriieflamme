@@ -1,9 +1,8 @@
 #ifndef STRUCT_H
 #define STRUCT_H
 
-#define hand_size 8
 /**
-* \file interface.h
+* \file struct.h
 *
 * \author Nathan VETTER
 * define the type of structures used in all the other files
@@ -13,6 +12,7 @@
 typedef struct carte {
     char* name;
     int function_number;
+    char* desc;
 } carte;
 
 
@@ -25,7 +25,7 @@ typedef struct cartePioche{
 
 /* tableau */
 typedef struct hand{
-    carte hand[hand_size];
+    carte hand[8];
 } hand; 
 
 /* nbr de point, main, redraw, nbr de victoire, pioche*/
