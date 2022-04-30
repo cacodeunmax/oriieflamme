@@ -36,7 +36,7 @@ void show_hand(faction);
 
 /**
 * \brief Show the option to redraw
-* \param f The faction could redraw
+* \param f The faction that could redraw
 * \return 1 if the player redraw, 0 otherwise
 */
 int show_redraw(faction);
