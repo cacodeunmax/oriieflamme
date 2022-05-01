@@ -34,7 +34,7 @@ main.o: main.c interface.h
 struct.o: struct.c struct.h constante.h carte.h plateau.h faction.h interface.h
 	$(CC) -c $<
 
-effets.o: effets.c struct.h 
+effets.o: effets.c struct.h carte.h plateau.h faction.h
 	$(CC) -c $<
 
 
