@@ -69,14 +69,14 @@ void draw(faction *f){
     pioche* pioche = f->pioche;
     int i;
     for (i=0; i<HAND_SIZE; i+=1){
-        (f->hand.hand)[i]=depioche(pioche);
+        f->hand[i]=depioche(pioche);
     }
 }
 
 void clearHand(faction *f){
     int i;
     for (i=0; i<HAND_SIZE; i++){
-        f->hand.hand[i]=CN;
+        f->hand[i]=CN;
     }
 }
 
