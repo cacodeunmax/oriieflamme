@@ -30,8 +30,9 @@ typedef struct hand{
 
 /* nbr de point, main, redraw, nbr de victoire, pioche*/
 typedef struct faction{
+    char* nom;
     int nb_point;
-    hand hand;
+    carte hand[8];
     int redraw;
     int nb_v;
     pioche* pioche;
