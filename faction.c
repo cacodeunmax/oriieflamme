@@ -25,12 +25,13 @@ int get_vic(faction f){
     return f.nb_v;
 }
 
-void add_point(faction f, int p){
-    f.nb_point += p;
+void add_point(faction *f, int p){
+    f->nb_point += p;
 }
 
-void shuffle(faction f){
-    srand(time(NULL));
+
+void shuffle(faction *f){
+    
     carte catalogue[DECK_SIZE];
     create_catalogue(catalogue);
 
@@ -47,40 +48,39 @@ void shuffle(faction f){
         pioche_add(catalogue[i], &piochef);
     }
 
-    f.pioche= &piochef;
-
+    f->pioche = &piochef;
 
 
 }
 
-void set_point(faction f, int p){
-    f.nb_point = p;
+void set_point(faction *f, int p){
+    f->nb_point = p;
 }
 
-void set_vic(faction f, int v){
-    f.nb_v = v;
+void set_vic(faction *f, int v){
+    f->nb_v = v;
 }
 
 int has_redrawn(faction f){
     return f.redraw;
 }
 
-void draw(faction f){
-    pioche* pioche = f.pioche;
+void draw(faction *f){
+    pioche* pioche = f->pioche;
     int i;
-    for (i=0; i<8; i++){
-        (f.hand.hand)[i]=depioche(pioche);
+    for (i=0; i<HAND_SIZE; i+=1){
+        (f->hand.hand)[i]=depioche(pioche);
     }
 }
 
-void clearHand(faction f){
+void clearHand(faction *f){
     int i;
-    for (i=0; i<8; i++){
-        f.hand.hand[i]=CN;
+    for (i=0; i<HAND_SIZE; i++){
+        f->hand.hand[i]=CN;
     }
 }
 
-void redraw(faction f){
+void redraw(faction *f){
     clearHand(f);
     shuffle(f);
     draw(f);
