@@ -138,27 +138,29 @@ carte flip_card(plateau *p){
 
 
 void victory_manche(plateau* p){
-    int i, j;
-    if ( p -> fa.nb_point > p-> fb.nb_point){
-        set_victory( &p -> fa);
-    } else if ( p -> fa.nb_point < p-> fb.nb_point){
-        set_victory( &p -> fb);
-    } else {
-        for (i = 0; i <31; i++){
-        for (j=0; j< 31; j++){
-            if ((!empty(p-> plateau.cases[i][j].carte))){
-                set_victory( p-> plateau.cases[i][j].fac);;
-                goto END;
+    if (!prevel){
+        int i, j;
+        if ( p -> fa.nb_point > p-> fb.nb_point){
+            set_victory( &p -> fa);
+        } else if ( p -> fa.nb_point < p-> fb.nb_point){
+            set_victory( &p -> fb);
+        } else {
+            for (i = 0; i <31; i++){
+            for (j=0; j< 31; j++){
+                if ((!empty(p-> plateau.cases[i][j].carte))){
+                    set_victory( p-> plateau.cases[i][j].fac);;
+                    goto END;
+                }
+            }
+                    
             }
         }
-                
-
-    }
     }
     END:;
 }
 
 int initialiser_manche(plateau p, faction* f1, faction* f2){
+    prevel =0;
     if (f1 == NULL){          
         int r = rand() % 2;
         if (r){
