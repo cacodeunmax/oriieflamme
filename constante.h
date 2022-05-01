@@ -12,6 +12,9 @@
 
 const carte CN = { "null", -1, "carte nulle"};
 const faction FN = {};
-const cell CLN = {{"null", -1}, 0, &FN};
+const cell CLN = {{ "null", -1, "carte nulle"}, 0, &FN};
+
+int last_card;
+int prevel;
 
 #endif
