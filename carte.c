@@ -19,11 +19,11 @@ int get_func(carte c){
 }
 
 int equals_carte(carte c, carte v){
-    return (strcmp(c.name,v.name)&&(c.function_number==v.function_number));
+    return (strcmp(c.name,v.name)==0 && (c.function_number==v.function_number));
 }
 
 int equals(carte c, char* name){
-    return strcmp(c.name, name);
+    return strcmp(c.name, name)==0;
 }
 
 int empty(carte c){
@@ -239,6 +239,5 @@ void create_catalogue(carte catalogue[]){
     catalogue[46]=prevel;
 
 }
-
 
 #endif
