@@ -10,6 +10,7 @@
 #include "constante.h"
 
 
+
 /**
 * \file plateau.c
 *
@@ -46,8 +47,11 @@ void set_c_sens(plateau p, int x, int y, int s){
     p.plateau.cases[x][y].sens = s;
 }
 
-void set_c_carte(plateau p, int x, int y, carte c){
+void set_c_carte(plateau p, faction *f, int x, int y, carte c){
     p.plateau.cases[x][y].carte = c;
+    p.plateau.cases[x][y].sens = 0;
+    p.plateau.cases[x][y].fac = f;
+
 }
 
 void set_c_fac(plateau p, int x, int y, faction* f){
@@ -57,6 +61,8 @@ void set_c_fac(plateau p, int x, int y, faction* f){
 void set_victory(faction *f){
     f->nb_v ++;
 }
+
+#include "effets.c"
 
 plateau create_plateau(){
     plateau p;
@@ -71,24 +77,24 @@ plateau create_plateau(){
     faction fa;
     faction fb;
 
+    fa.nom = "Premier joueur";
     fa.nb_v=0;
     fa.nb_point=0;
     fa.redraw=0;
-    printf("cas fa\n");
+    
     clearHand(&fa);
     shuffle(&fa);
-    printf("fin cas fa\n\n");
 
+    fb.nom = "Deuxième joueur";
     fb.nb_v=0;
     fb.nb_point=0;
     fb.redraw=0;
-    printf("cas fb\n");
     clearHand(&fb);
     shuffle(&fb);
-    printf("fin cas fb\n\n");
 
     p.fa = fa;
     p.fb = fb;
+
 
     return p;
 }
@@ -114,24 +120,27 @@ void put_card(plateau *p,carte c, faction *f, int x,int y){
 
 carte flip_card(plateau *p){
     int i, j;
+    int x,y;
     carte c;
     c = CN;
 
     faction *f;
-    for (i = 0; i <31; i++){
-        for (j=0; j< 31; j++){
-           if ( !strcmp(c.name, "null")){
+    for (i = 0; i <4 * HAND_SIZE -1; i++){
+        for (j=0; j< 4 * HAND_SIZE -1; j++){
+           if ( strcmp(c.name, "null")){
                 break;
             } 
-            if ((!strcmp(p-> plateau.cases[i][j].carte.name, "null"))&&(!p-> plateau.cases[i][j].sens)){
+            if ((!empty(p-> plateau.cases[i][j].carte))&&(!p-> plateau.cases[i][j].sens)){
                 p-> plateau.cases[i][j].sens = 1;
                 c = p-> plateau.cases[i][j].carte;
                 f = p-> plateau.cases[i][j].fac;
+                x=i;
+                y=j;
                 break;
             }
         }
     }
-    //connec_carte(*p, f, c.function_number);
+    //active(c, f, p, x, y);
     last_card = c.function_number;
     return c;
 }
@@ -139,16 +148,21 @@ carte flip_card(plateau *p){
 
 void victory_manche(plateau* p){
     if (!prevel){
+        printf("Nombre de point du %s: %i.\n", p->fa.nom, p->fa.nb_point);
+        printf("Nombre de point du %s: %i.\n", p->fb.nom, p->fb.nb_point);
         int i, j;
         if ( p -> fa.nb_point > p-> fb.nb_point){
-            set_victory( &p -> fa);
+            p -> fa.nb_v++;
+            printf("victoire du %s!\n", p->fa.nom);
         } else if ( p -> fa.nb_point < p-> fb.nb_point){
-            set_victory( &p -> fb);
+            p -> fb.nb_v++;
+            printf("victoire du %s!\n", p->fb.nom);
         } else {
-            for (i = 0; i <31; i++){
-            for (j=0; j< 31; j++){
+            for (i = 0; i <4 * HAND_SIZE -1; i++){
+            for (j=0; j< 4* HAND_SIZE -1; j++){
                 if ((!empty(p-> plateau.cases[i][j].carte))){
-                    set_victory( p-> plateau.cases[i][j].fac);;
+                    p-> plateau.cases[i][j].fac->nb_v ++;
+                    printf("victoire du %s!\n", p->plateau.cases[i][j].fac->nom);
                     goto END;
                 }
             }
@@ -164,11 +178,11 @@ int initialiser_manche(plateau p, faction* f1, faction* f2){
     if (f1 == NULL){          
         int r = rand() % 2;
         if (r){
-            f1 = &p.fa;
-            f2 = &p.fb;
+            *f1 = p.fa;
+            *f2 = p.fb;
         } else {
-            f1 = &p.fb;
-            f2 = &p.fa;  
+            *f1 = p.fb;
+            *f2 = p.fa;  
         }
         
     } else if ((f1 -> nb_v == MG) || (f2 -> nb_v == MG)){
@@ -177,17 +191,17 @@ int initialiser_manche(plateau p, faction* f1, faction* f2){
     }else if (!(f1-> nb_point + f2 -> nb_point)%2){
         int r = rand() % 2;
         if (r){
-            f1 = &p.fa;
-            f2 = &p.fb;
+            *f1 = p.fa;
+            *f2 = p.fb;
         } else {
-            f1 = &p.fb;
-            f2 = &p.fa;  
+            *f1 = p.fb;
+            *f2 = p.fa;  
         }
 
     } else {
         faction temp = *f1;
-        f1 = f2;
-        f2= &temp;
+        *f1 = *f2;
+        *f2= temp;
     }
 
 
