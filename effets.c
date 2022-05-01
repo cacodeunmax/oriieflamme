@@ -1,5 +1,5 @@
 /** 
-*\file plateau.h
+*\file effet.c
 *
 *\author Noémie TURMEL
 *Ce fichier decrit l'ensemble des fonctions associés à l'activation des effets des cartes
@@ -15,6 +15,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include "constante.h"
+#include "carte.c"
+#include "faction.c"
+#include "plateau.c"
 //#include "struct.c"
 
 
@@ -32,7 +36,7 @@ carte null={"null",-1};*/
 *\param p une une faction
 *\return nothing 
 */
-void f_fise(faction p){
+void f_fise(faction *p){
   add_point(p,1);
 }
 
@@ -42,12 +46,12 @@ void f_fise(faction p){
 *\param m le plateau
 *\return nothing 
 */
-void f_fisa(faction f,plateau p){
+void f_fisa(faction *f,plateau p){
     int count=0;
     for (int i=0; i<N; i++){
         for (int j=0; j<N; j++){
             carte current_carte=get_c_carte(p,i,j);
-            if (!(equals(current_carte)))
+            if (!(empty(current_carte)))
              {
                 if (get_c_sens(p,i,j)==1){
                     count++;
@@ -69,7 +73,7 @@ void f_fisa(faction f,plateau p){
 *\param pl le plateau
 *\return nothing 
 */
-void f_fc(faction p,plateau pl){
+void f_fc(faction *p,plateau pl){
     
     int au_moins_1=0;
     for (int i=0; i<N; i++){
@@ -80,8 +84,8 @@ void f_fc(faction p,plateau pl){
             {
                 if (get_c_sens(pl,i,j)==1){
 
-                pt=pt+4;
-                set_point(p,pt);
+                int pt=4;
+                add_point(p,pt);
                 au_moins_1=1;
                 break;}
             }
@@ -95,16 +99,14 @@ void f_fc(faction p,plateau pl){
 *\param m le plateau
 *\return nothing 
 */
-void f_ecologiie(faction p,plateau m){
+void f_ecologiie(faction *p,plateau m){
     for (int i=0; i<N; i++){
         for (int j=0; j<N; j++){
-            carte current_carte=get_c_carte(m,i,j)
+            carte current_carte=get_c_carte(m,i,j);
             if (equals(current_carte,"FC")||equals(current_carte,"FISE")||equals(current_carte,"FISA"))
             {
                 if ((get_c_sens(m,i,j))==1){
-                int h=get_point(p);
-                h++;
-                set_point(p,h);
+                    add_point(p,1);
                 }    
             }
         }
@@ -142,22 +144,23 @@ void randomize(carte arr[], int n) {
 *\param c une carte
 *\return nothing 
 */
-void haut_gauche(plateau m,carte c, faction f){
+void haut_gauche(plateau *m,carte c, faction *f){
     for (int i=0; i<N; i++){
         for (int j=0; j<N; j++){
            
 
-            int current_sens=get_c_sens(m,i,j)
+            int current_sens=get_c_sens(*m,i,j);
             /*carte current_carte=current_cell.carte;*/
             /* le cas current_sens==1 et i=0 n'est pas possible*/
             if (current_sens==1){
                 //m.cases[i-1][j]=(cell) {c,0,f};
-                put_card(*m,c,*f,i,j);
+                set_c_carte(*m,f,i-1,j,c);
 
-                break;
+                goto END;
             }
         }
     }
+    END: ;
 }
             
 
@@ -167,25 +170,25 @@ void haut_gauche(plateau m,carte c, faction f){
 *\param m le plateau
 *\return nothing 
 */
-void f_liiens(faction p,plateau m){
+void f_liiens(faction *p,plateau *m){
 
-    carte cartes_retirees[hand_size*2];
-    for (int k=0; k<(hand_size*2); k++){
+    carte cartes_retirees[HAND_SIZE*2];
+    for (int k=0; k<(HAND_SIZE*2); k++){
         cartes_retirees[k]=CN;
     }
     for (int i=0; i<N; i++){
         for (int j=0; j<N; j++){
 
-            carte current_carte=get_c_carte(p,i,j);
-            int current_sens=get_c_sens(p,i,j);
-            if (  (equals(current_carte,"FC"))||equals(current_carte,"FISE")||equals(current_carte,"FISA"))&&(current_sens==1))
+            carte current_carte=get_c_carte(*m,i,j);
+            int current_sens=get_c_sens(*m,i,j);
+            if (  (equals(current_carte,"FC")||equals(current_carte,"FISE")||equals(current_carte,"FISA"))&&(current_sens==1))
             {
                 carte cc=current_carte;
                 //cell cellule ={null,-1,NULL};
              
-                set_c_nulle(p,i,j);
+                set_c_nulle(*m,i,j);
 
-                for (int k=0; k<(hand_size*2); k++){
+                for (int k=0; k<(HAND_SIZE*2); k++){
 
                     if     ( empty(cartes_retirees[k])){
                         cartes_retirees[k]=cc;
@@ -195,8 +198,8 @@ void f_liiens(faction p,plateau m){
         }
     } 
     //a ce moment la de la fonction carte_retirees contient les cartes retirées
-    randomize(cartes_retirees,(hand_size*2)); //on shuffle
-    for (int k=0; k<(hand_size*2); k++){
+    randomize(cartes_retirees,(HAND_SIZE*2)); //on shuffle
+    for (int k=0; k<(HAND_SIZE*2); k++){
         carte ccc=cartes_retirees[k];
         haut_gauche(m,ccc,p);
         
@@ -237,7 +240,7 @@ void f_ssa(/*faction p,*/plateau m){
         for (int j=0; j<N; j++){
             carte current_carte = get_c_carte(m,i,j);
             int current_sens=get_c_sens(m,i,j);
-            if (  (equals(current_carte,"FC"))||equals(current_carte,"FISE")||equals(current_carte,"FISA"))&&(current_sens==1))
+            if (  ((equals(current_carte,"FC"))||equals(current_carte,"FISE")||equals(current_carte,"FISA"))&&(current_sens==1))
             {
                 //cell cellule ={null,-1,NULL};
                 //set_c_nulle(m,i,j);
@@ -247,7 +250,7 @@ void f_ssa(/*faction p,*/plateau m){
 
             current_carte = get_c_carte(m,i,j);
             current_sens=get_c_sens(m,i,j);
-            if ((current_sens==1)&&(!(equals(current_carte))){
+            if ((current_sens==1)&&(!(empty(current_carte)))){
                 lst=i;
                 if (fst==-1){fst=i;}
             }
@@ -275,14 +278,14 @@ void f_alcool(plateau m, int i, int j){
 
 
     /* avec l'implémenation qu'on à on est jamais au bord du plateau*/
-    m.cases[(i-1)][j]=(cell) {null,-1,NULL};
-    m.cases[i+1][j]=(cell) {null,-1,NULL};
-    m.cases[i][j-1]=(cell) {null,-1,NULL};
-    m.cases[i][j+1]=(cell) {null,-1,NULL};
-    set_c_nulle(m,(i-1),j);
+    m.plateau.cases[(i-1)][j]= CLN;
+    m.plateau.cases[i+1][j]=CLN;
+    m.plateau.cases[i][j-1]=CLN;
+    m.plateau.cases[i][j+1]=CLN;
+    /*set_c_nulle(m,(i-1),j);
     set_c_nulle(m,(i+1),j);
     set_c_nulle(m,i,(j-1));
-    set_c_nulle(m,i,(j+1));
+    set_c_nulle(m,i,(j+1));*/
 
 }
 /**
@@ -291,15 +294,15 @@ void f_alcool(plateau m, int i, int j){
 *\param m le plateau
 *\return nothing 
 */
-void f_cafe(faction p,plateau m){
+void f_cafe(faction *p,plateau m){
     int eco;
    for (int i=0; i<N; i++){
         for (int j=0; j<N; j++){
             carte current_carte = get_c_carte(m,i,j);
-            int current_sens=get_c_carte(m,i,j)
-            if (((equals(current_carte,"Thé"||equals(current_carte,"Alcool")&&(current_sens==1))){
+            int current_sens=get_c_sens(m,i,j);
+            if (((equals(current_carte,"Thé")||equals(current_carte,"Alcool"))&&(current_sens==1))){
                 //set_c_nulle(m,i,j);
-                set_c_nulle(p,i,j);
+                set_c_nulle(m,i,j);
             }
             if ((equals(current_carte,"Ecocup")&&(current_sens==1))){
                 add_point(p,1);
@@ -317,16 +320,16 @@ void f_cafe(faction p,plateau m){
 *\param m le plateau
 *\return nothing 
 */
-void f_the(faction p,plateau m){
+void f_the(faction *p,plateau m){
 int eco;
    for (int i=0; i<N; i++){
         for (int j=0; j<N; j++){
             carte current_carte = get_c_carte(m,i,j);
             int current_sens=get_c_sens(m,i,j);
-            if (((equals(current_carte,"Café")||equals(current_carte,"Alcool")&&(current_sens==1))){
+            if (((equals(current_carte,"Café")||equals(current_carte,"Alcool"))&&(current_sens==1))){
                 set_c_nulle(m,i,j);
             }
-            if ((equals(current_carte,"Ecocup"&&(current_sens==1))){
+            if ((equals(current_carte,"Ecocup")&&(current_sens==1))){
                 add_point(p,1);
                 eco++;
             }
@@ -347,16 +350,16 @@ void f_reprographie(faction p,plateau m){
 
     /*on initialise le tableau des occurences*/
     int occ[33];
-    for (int k;k<33,k++){
+    for (int k;k<33;k++){
         occ[k]=0;
     }
 
     /*on boucle sur la grille pour récolter le nombre d'occurence de chaque carte*/
     for (int i=0;i<N; i++){
-        for (int i=0;i<N; i++){
+        for (int j=0;i<N; i++){
             carte cc=get_c_carte(m,i,j);
             int sens=get_c_sens(m,i,j);
-            if (!empty(cc)){
+            if (!empty(cc) && sens){
                 int x=get_func(cc);
                 occ[x]++;
             }
@@ -365,11 +368,11 @@ void f_reprographie(faction p,plateau m){
 
     /*dénombrement : le nombre de paires d'un ensemble fini à n éléments est égal à n(n – 1)/2  */
     int n;
-    faction adv=get_adverse(p);
-    for (int k;k<33,k++){
+    faction adv= get_adverse( m, p);
+    for (int k;k<33;k++){
         n=occ[k];
-        nb=n*(n-1)/2;
-        add_point(adv,(-nb));
+        int nb=n*(n-1)/2;
+        add_point(&adv,(-nb));
     }
 
 }
@@ -381,12 +384,12 @@ void f_reprographie(faction p,plateau m){
 *\param m le plateau
 *\return nothing 
 */
-void f_isolation(plateau p){
+void f_isolation(plateau m, faction p){
     for (int i=0; i<N; i++){
         for (int j=0; j<N; j++){
             carte cc=get_c_carte(m,i,j);
             int sens=get_c_sens(m,i,j);
-            faction f=get_c_fac(m,i,j);
+            faction *f= get_c_fac(m,i,j);
             if ((sens==0)&&(!empty(cc))){
                 add_point(f,1);
             }
@@ -411,10 +414,10 @@ void f_sobriete(plateau m){
         for (int j=0; j<N; j++){
             carte current_carte=get_c_carte(m,i,j);
             int sens=get_c_sens(m,i,j);
-            if( (!(equals(current_carte)))&&(jg=-1) ){
+            if( (!(empty(current_carte)))&&(jg=-1)&& !sens ){
                 jg=j;
             }
-            if(!(equals(current_carte))){
+            if(!(empty(current_carte))&& !sens){
                 jd=j;
             }
         }
@@ -430,14 +433,14 @@ void f_sobriete(plateau m){
 *\return nothing 
 */
 void f_heure(faction p,plateau m){
-    faction adv=get_adverse(m,f);
+    faction adv=get_adverse(m,p);
 
     for (int i=1; i<N; i++){
         for (int j=0; j<N; j++){
             carte current_carte = get_c_carte(m,i,j);
             int current_sens=get_c_sens(m,i,j);
             if ((equals(current_carte,"Heures supplémentaires")&&(current_sens==1))){
-                add_point(adv,(-3));
+                add_point(&adv,(-3));
             }
         }
     }
@@ -475,8 +478,8 @@ void f_KB(faction p,plateau m){
         i =rand_up_to(N-1);
         j=rand_up_to(N-1);
         carte current_carte=get_c_carte(m,i,j);
-        int current_sens=get_c_sens(m,i,j);
-        int var=empty(current_carte);
+        current_sens=get_c_sens(m,i,j);
+        var=empty(current_carte);
     }
     if ((current_sens==1)&&(!(var)))
     {
@@ -491,7 +494,7 @@ void f_KB(faction p,plateau m){
 *\param m le plateau
 *\return nothing 
 */
-void f_KG(faction p,plateau m){
+void f_KG(faction *p,plateau m){
     int count=0;
 
     while(count==0){
@@ -533,14 +536,14 @@ void f_MM(faction p,plateau m, carte c){}
 */
 
 void f_VY(faction p,plateau m){
-    faction q=get_adverse(p);
+    faction q=get_adverse(m, p);
     if (get_point(p)>get_point(q)){
-        add_point(q,3);
+        add_point(&q,3);
 
     }
     /* si les 2 factions ont le meme nb de points personne n'en gagne avec cette carte*/
     if (get_point(p)<get_point(q)){
-        add_point(p,3);
+        add_point(&p,3);
     }
 }
 
@@ -642,7 +645,7 @@ void supprime_last(plateau m){
     int y;
     for (int i=0; i<N; i++){
             for (int j=0; j<N; j++){
-               current_carte=get_c_carte(m,i,j); 
+               carte current_carte=get_c_carte(m,i,j); 
                int current_sens=get_c_sens(m,i,j);
                 if (( (!empty(current_carte))&&(current_sens==1))){
                     x=i;
@@ -661,13 +664,13 @@ void supprime_last(plateau m){
 *\return nothing 
 */
 
-void f_ALL(faction p,plateau m){
+void f_ALL(faction *p,plateau m){
 
    for (int i=0; i<N; i++){
         for (int j=0; j<N; j++){
             carte current_carte = get_c_carte(m,i,j);
             int current_sens=get_c_sens(m,i,j);
-            if (  (equals(current_carte,"EcologIIE"))||equals(current_carte,"parcours Sobriété numérique")||equals(current_carte,"Ecocup"||strcmp(current_carte.name,"Isolation du bâtiment"))&&(current_sens==1)){
+            if (  (equals(current_carte,"EcologIIE")||equals(current_carte,"parcours Sobriété numérique")||equals(current_carte,"Ecocup")||equals(current_carte,"Isolation du bâtiment"))&&(current_sens==1)){
                add_point(p,3);
                 supprime_last(m);
             }
@@ -678,17 +681,15 @@ void f_ALL(faction p,plateau m){
 /**
 *\brief active l'effet de la carte Guillaume burel
 *\param p une faction
-
-*\param q une faction
 *\param m le plateau
 *\return nothing 
 */
 
-void f_GB(faction p){
-    faction q=get_adverse(p);
+void f_GB(faction p, plateau m){
+    faction q=get_adverse(m, p);
     if (get_point(p)>=get_point(q)){
-        add_point(p,3);
-        add_point(q,(-3));
+        add_point(&p,3);
+        add_point(&q,(-3));
     }
 }
 
@@ -738,10 +739,10 @@ void f_CM(plateau m){
 *\return nothing 
 */
 
-void f_TM(faction p, plateau m){
+void f_TM(faction *p, plateau m){
     int forest;
     int cfise;
-    faction q=get_adverse(p);
+    faction q=get_adverse(m, *p);
     
     //premières boucles sur le plateau, on cherche forest
     for (int i=0; i<N; i++){
@@ -761,7 +762,7 @@ void f_TM(faction p, plateau m){
         add_point(p,(3*cfise));
     }
     else{
-        add_point(q,(-cfise));
+        add_point(&q,(-cfise));
     }
 }
 
@@ -774,7 +775,7 @@ void f_TM(faction p, plateau m){
 *\param m le plateau
 *\return nothing 
 */
-void f_JF(faction p, plateau m){
+void f_JF(faction *p, plateau m){
     int cafe;
     int cfise=0;
     
@@ -793,6 +794,7 @@ void f_JF(faction p, plateau m){
     }
     if (cafe==1){
         add_point(p,(6*cfise));
+    }
 }
     
 /**
@@ -801,7 +803,7 @@ void f_JF(faction p, plateau m){
 *\param m le plateau
 *\return nothing 
 */
-void f_DW(faction p, plateau m){
+void f_DW(faction *p, plateau m){
     int the;
     int count=0;   
     //premières boucles sur le plateau, on cherche forest
@@ -809,19 +811,20 @@ void f_DW(faction p, plateau m){
         for (int j=0; j<N; j++){
             carte current_carte = get_c_carte(m,i,j);
             int current_sens=get_c_sens(m,i,j);
-            if ( (equals(current_carte,"FISE"))&&(current_sens==1))){
+            if ( (equals(current_carte,"FISE"))&&(current_sens==1)){
                 count++;
             }
-            if ( (equals(current_carte,"FC")))&&(current_sens==1))){
+            if ( (equals(current_carte,"FC"))&&(current_sens==1)){
                 count++;
             }
-            if (  (equals(current_carte,"Thé"&&(current_sens==1))){
+            if (  (equals(current_carte,"Thé"))&&(current_sens==1)){
                 the=1;
             }
         }
     }
     if (the==1){
         add_point(p,(3*count));
+    }
 }
 
 
@@ -837,14 +840,14 @@ void f_DW(faction p, plateau m){
 *\return nothing 
 */
 
-void f_DADC(faction p, plateau m, int x){
+void f_DADC(faction *p, plateau m, int x){
     int count=0;   
     //premières boucles sur le plateau, on cherche forest
     for (int j=0; j<N; j++){
     
         carte current_carte=get_c_carte(m,x,j);
         int current_sens=get_c_sens(m,x,j);
-        if (current_sens==1){
+        if (current_sens && !empty(current_carte)){
             count++;
         }
         if (count>=3){
@@ -864,6 +867,9 @@ void f_DADC(faction p, plateau m, int x){
 *\param x l'entier numéro de ligne de la carte
 *\return nothing 
 */
+void f_EL(){
+
+}
 
 
 
@@ -878,23 +884,23 @@ void f_DADC(faction p, plateau m, int x){
 *\return nothing 
 */
 
-void f_LP(plateau m, int x, int y, faction p){
+void f_LP(plateau m, int x, int y, faction *p){
 
     carte current_carte;
     int current_sens; 
     int fisa=0;
-    for (int k=0; j<N; j++){
+    for (int k=0; k<N; k++){
         
         current_carte=get_c_carte(m,x,k);
         current_sens=get_c_sens(m,x,k);
-        if ( (equals(current_carte,"FISA"))&&(current_sens==1))){
+        if ( (equals(current_carte,"FISA"))&&(current_sens==1)){
             fisa++;
             break;
         }
 
          current_carte=get_c_carte(m,k,y);
         current_sens=get_c_sens(m,y,k);
-        if ( (equals(current_carte,"FISA"))&&(current_sens==1))){
+        if ( (equals(current_carte,"FISA"))&&(current_sens==1)){
             fisa++;
             break;
         }
@@ -914,15 +920,15 @@ void f_LP(plateau m, int x, int y, faction p){
 *\return nothing 
 */
 
-void f_KS(faction p, plateau m, int x){
+void f_KS(faction *p, plateau m, int x){
 
     int DADC=0;
     int EL=0;
     int LP=0;
     for (int i=0; i<N; i++){
         for (int j=0; j<N; j++){
-            cc=get_c_carte(m,i,j);
-            sens=get_c_sens(m,i,j);
+            carte cc=get_c_carte(m,i,j);
+            int sens=get_c_sens(m,i,j);
             if (equals(cc,"Djibril-Aurélien Djembele-Cabeau")&&(sens==1)){
                 DADC=1;
             }
@@ -956,13 +962,13 @@ void f_KS(faction p, plateau m, int x){
 *\return nothing 
 */
 
-void f_PREVEL(faction p, plateau m){
+void f_PREVEL(faction *p, plateau m){
     //on va d'abord vérifié si PREVEL elle la dernière carte qui est retournée
     int last=1;
     for (int i=0; i<N; i++){
         for (int j=0; j<N; j++){
-            cc=get_c_carte(m,i,j);
-            sens=get_c_sens(m,i,j);
+            carte cc=get_c_carte(m,i,j);
+            int sens=get_c_sens(m,i,j);
             if((!empty(cc))&&(sens==0)){
                 last=0;
                 break;
@@ -972,7 +978,8 @@ void f_PREVEL(faction p, plateau m){
     }
 
     if(last==1){ //cad Laurent prevrel est bien la dernière carte qui a été retournée
-        set_victory_manche(p,m);
+        set_victory(p);
+        prevel = 1;
     }
 }
 
@@ -995,59 +1002,103 @@ void active(carte c, faction* p, plateau* m,int i, int j){
     {
         case 1:
         f_fise(p);
+        break;
         case 2:
-        f_fisa(p,m);   
+        f_fisa(p,*m);
+        break;   
         case 3:
-        f_fc(p,m);
+        f_fc(p,*m);
+        break;
         case 4: 
-        f_ecologiie(p,m);
+        f_ecologiie(p,*m);
+        break;
         
         case 5:
         f_liiens(p,m);
+        break;
         case 6 :
-        f_ssa(m);
+        f_ssa(*m);
+        break;
         case 7 :
-        f_alcool(m,i,j);
+        f_alcool(*m,i,j);
+        break;
         case 8 :
-        f_cafe(p,m);
+        f_cafe(p,*m);
+        break;
         
         case 9 : 
-        f_the(p,m);
+        f_the(p,*m);
+        break;
         
         case 10 : ; //ecocup
+        break;
         case 11: 
-        f_reprographie(p,m);
+        f_reprographie(*p,*m);
+        break;
         case 12 : 
-        f_isolation(m);
+        f_isolation(*m, *p);
+        break;
         case 13 :
-        f_sobriete(m);
+        f_sobriete(*m);
+        break;
         case 14: 
-        f_heure(p,m);
-        case 15: f_KB(p,m);
+        f_heure(*p,*m);
+        break;
+        case 15: f_KB(*p,*m);
+        break;
         case 16 :
-        f_KG(p,m);
+        f_KG(p,*m);
+        break;
         case 17:
-        f_MM(p,m,c);
+        f_MM(*p,*m,c);
+        break;
         case 18 :
-        f_VY(p,m);
-        case 19: f_JS(p,m);
+        f_VY(*p,*m);
+        break;
+        case 19: 
+        f_JS(*p,*m);
+        break;
 
         case 20:
-        f_FB(p,m);
+        f_FB(*p,*m);
+        break;
         case 21: 
-        f_CD(p,m,i,j);
-        case 22: f_ALL(p,m);
-        case 23: f_GB(m);
-        case 24: f_CM(m);
-        case 25: f_TM(p,m);
-        case 26: f_JS(p,m);
-        case 27: f_DW(p,m);
-        case 28: f_DADC(p,m,i);
-        case 29: f_EL();
-        case 30: f_LP(m,i,j,p);
-        case 31: f_KS(p,m,i);
-        case 32: f_PREVEL(f,m);
-        case default : 
+        f_CD(*p,*m,i,j);
+        break;
+        case 22:
+         f_ALL(p,*m);
+        break;
+        case 23:
+         f_GB(*p, *m);
+        break;
+        case 24:
+         f_CM(*m);
+        break;
+        case 25:
+         f_TM(p,*m);
+        break;
+        case 26:
+         f_JS(*p,*m);
+        break;
+        case 27:
+         f_DW(p,*m);
+        break;
+        case 28:
+         f_DADC(p,*m,i);
+        break;
+        case 29:
+         f_EL();
+        break;
+        case 30:
+        f_LP(*m,i,j,p);
+        break;
+        case 31:
+         f_KS(p,*m,i);
+        break;
+        case 32:
+         f_PREVEL(p,*m);
+        break;
+        default : ;
     }
 
 
