@@ -1,4 +1,3 @@
-
 /** 
 *\file plateau.h
 *
@@ -15,19 +14,58 @@
 *-flip_card(p,c) pour retourner une carte face visible et activer son effet
 */
 
+#ifndef PLATEAU_H
+#define PLATEAU_H
+
 #include "carte.h"
 #include "faction.h"
 
-typedef struct not_defined_plateau *plateau;
+typedef struct plateau plateau;
 
+/**
+*\brief donne le sens de la carte a la postion x y
+*\param p le plateau,
+*\param x un entier qui représente la position en abscisse
+*\param y un entier qui représente la position en ordonne
+*\return le sens
+*/
 int get_c_sens(plateau p, int x, int y);
 
+/**
+*\brief donne la carte a la postion x y
+*\param p le plateau,
+*\param x un entier qui représente la position en abscisse
+*\param y un entier qui représente la position en ordonne
+*\return la carte a la position x y du plateau
+*/
 carte get_c_carte(plateau p, int x, int y);
 
+/**
+*\brief donne la faction de la carte a la postion x y
+*\param p le plateau,
+*\param x un entier qui représente la position en abscisse
+*\param y un entier qui représente la position en ordonne
+*\return une pointeur vers la faction de la carte a la position x y
+*/
 faction* get_c_fac(plateau p, int x, int y);
 
+/**
+*\brief set le sens de la carte a la postion x y
+*\param p le plateau,
+*\param x un entier qui représente la position en abscisse
+*\param y un entier qui représente la position en ordonne
+*\param s le nouveau sens de la carte
+*\return nothing
+*/
 void set_c_sens(plateau p, int x, int y, int s);
 
+/**
+*\brief donne le sens de la carte a la postion x y
+*\param p le plateau,
+*\param x un entier qui représente la position en abscisse
+*\param y un entier qui représente la position en ordonne
+*\return le sens
+*/
 void set_c_carte(plateau p, int x, int y, carte c);
 
 void set_c_fac(plateau p, int x, int y, faction* f);
@@ -101,3 +139,5 @@ le plateau est modifié, en l'occurence les factions définies dans le plateau
 *\return nothing
 */
 void victory_manche(plateau* p);
+
+#endif
