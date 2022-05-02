@@ -22,11 +22,7 @@
 #ifndef FACTION_H
 #define FACTION_H
 
-typedef struct faction *faction;
-typedef struct couple {
-    faction fa;
-    faction fb;
-} couple;
+#include "struct.h"
 
 
 /**
