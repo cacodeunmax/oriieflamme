@@ -2,8 +2,12 @@
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
+#include <time.h>
 #include "interface.c"
+#include "constante.h"
 //#include "effets.c"
+
+/* Compiler uniquement main.c*/
 
 int main(){
     
@@ -22,7 +26,8 @@ int main(){
 
     /*corps du jeu*/
     /*on utilise une boucle infinie mais en vérité il ya au maximum 3 manches dans une partie donc on va finir
-    par passer dans le if(fin) et donc par le return*/
+    par passer dans le if(fin) et donc par le return. Présentement, l'assignation des points ne fonctionne pas
+    et la partie ne se finie donc jamais */
     
     while (1){
 
