@@ -10,7 +10,7 @@
 #ifndef CARTE_H
 #define CARTE_H
 
-typedef struct carte carte;
+#include "struct.h"
 
 /**
 * \brief Get the name of a card
@@ -48,5 +48,13 @@ int equals(carte c, char* name);
 * \return 1 if empty, else 0
 */
 int empty(carte c);
+
+
+/**
+* \brief Create the catalogue of all cards
+* \param catalogue The catalogue where the cards will be staocked
+* \return nothing
+*/
+void carte_catalogue(carte *catalogue);
 
 #endif
