@@ -67,7 +67,6 @@ void set_c_sens(plateau p, int x, int y, int s);
 */
 void set_c_carte(plateau p, int x, int y, carte c);
 
-void set_c_fac(plateau p, int x, int y, faction* f);
 
 void set_c_nulle (plateau p, int x, int y);
 
@@ -93,7 +92,7 @@ void free_plateau(plateau p);
 *\param f2 un pointeur vers une faction
 *\return nothing 
 */
-int initialiser_manche(plateau* p, faction* f1, faction* f2);
+int initialiser_manche(plateau p, faction* f1, faction* f2);
 
 
 /**
