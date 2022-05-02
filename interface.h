@@ -37,21 +37,21 @@ void show_plateau(plateau p);
 * \param f The faction whose hand is shown
 * \return Nothing
 */
-void show_hand(faction f);
+void show_hand(faction *f);
 
 /**
 * \brief Show the option to redraw
 * \param f The faction that could redraw
 * \return 1 if the player redraw, 0 otherwise
 */
-int show_redraw(faction f);
+int show_redraw(faction *f);
 
 /**
 * \brief Show the option to chose a card to play
 * \param f The faction which is playing
 * \return The chosen card
 */
-carte chose_card(faction f);
+carte chose_card(faction *f);
 
 /**
 * \brief Check if a card has been played next to a case
