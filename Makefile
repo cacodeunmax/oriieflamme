@@ -5,7 +5,7 @@
 #remplacer par dépendances mises à jour // cible: $?
 #remplacer par toutes les dépendances: $^ 
 
-OBJ = main.o pile.o liste.o
+OBJ = main.o carte.o interface.o faction.o plateau.o 
 CC = gcc -Wall -Wextra -std=c99
 
 all: oriiflamme
@@ -37,7 +37,7 @@ struct.o: struct.c struct.h constante.h carte.h plateau.h faction.h interface.h
 effets.o: effets.c struct.h carte.h plateau.h faction.h
 	$(CC) -c $<
 
-
+#---------------------------------- FINAL ---------------------------------------
 oriiflamme : $(OBJ)
 	$(CC) -o $@ $^
 
