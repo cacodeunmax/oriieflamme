@@ -19,8 +19,7 @@
 
 #include "carte.h"
 #include "faction.h"
-
-typedef struct plateau plateau;
+#include "struct.h"
 
 /**
 *\brief donne le sens de la carte a la postion x y
@@ -60,22 +59,6 @@ faction* get_c_fac(plateau p, int x, int y);
 void set_c_sens(plateau p, int x, int y, int s);
 
 /**
-*\brief donne le sens de la carte a la postion x y
-*\param p le plateau,
-*\param x un entier qui représente la position en abscisse
-*\param y un entier qui représente la position en ordonne
-*\return le sens
-*/
-void set_c_carte(plateau p, int x, int y, carte c);
-
-void set_c_fac(plateau p, int x, int y, faction* f);
-
-void set_c_nulle (plateau p, int x, int y);
-
-void add_point(faction f, int p);
-
-
-/**
 *\brief créer un nouveau plateau (et les deux factions qui joueront dessus))
 *\return le plateau créé 
 */
@@ -97,7 +80,7 @@ void free_plateau(plateau p);
 *\param f2 un pointeur vers une faction
 *\return nothing 
 */
-int initialiser_manche(plateau* p, faction* f1, faction* f2);
+int initialiser_manche(plateau p, faction* f1, faction* f2);
 
 
 /**
