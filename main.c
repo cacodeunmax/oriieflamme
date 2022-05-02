@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include "interface.h"
+#include "constante.h"
 //#include "effets.c"
 
 int main(){
