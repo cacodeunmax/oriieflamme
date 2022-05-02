@@ -1,3 +1,6 @@
+#ifndef STRUCT_C
+#define STRUCT_C
+
 #include "struct.h"
 #include <stddef.h>
 #include <stdlib.h>
@@ -71,3 +74,5 @@ carte depioche(pioche *p){
     *p = (*p)->suivant;
     return c;
 }
+
+#endif
