@@ -65,8 +65,52 @@ typedef struct plateau{
 } plateau;  
 
 
+/**
+* \brief Create a grid
+* \param size The size of the grid
+* \return The created grid
+*/
+grid grid_create(int size);
 
 
+/**
+* \brief Free a grid
+* \param g The grid
+* \return Nothing
+*/
+void grid_free(grid g);
 
+
+/**
+* \brief Create a pioche
+* \return The created pioche
+*\
+pioche create_empty_pioche();
+
+
+/**
+* \brief Make a pioche starting with a specified
+* \param c The card
+* \param p The pioche
+* \return Nothing
+*/
+pioche make(carte c, pioche p);
+
+
+/**
+* \brief Add a carte to a pioche
+* \param p A pointer to the pioche
+* \param c The carte to add
+* \return Nothing
+*/
+void pioche_add(carte c, pioche *p);
+
+
+/**
+* \brief Remove a carte from a pioche
+* \param p A pointer to the pioche
+* \return The removed carte
+*/
+carte depioche(pioche *p);
 
 #endif
