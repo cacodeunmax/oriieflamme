@@ -1,14 +1,13 @@
 #ifndef PLATEAU_C
 #define PLATEAU_C
 
-#include "struct.c"
 #include <string.h>
 #include <stddef.h>
 #include <stdlib.h>
-#include "faction.c"
+#include "faction.h"
 #include "struct.h"
 #include "constante.h"
-
+//#include "effets.c"
 
 
 /**
@@ -28,10 +27,10 @@ carte get_c_carte(plateau p, int x, int y){
 }
 
 faction get_adverse(plateau p, faction f){
-    if (&p.fa == &f){
+    if (&(p.fa) == &f){
         return p.fb;
     } else {
-        return p.fa;
+        return  p.fa;
     }
 }
 
@@ -62,7 +61,7 @@ void set_victory(faction *f){
     f->nb_v ++;
 }
 
-#include "effets.c"
+
 
 plateau create_plateau(){
     plateau p;
@@ -77,7 +76,7 @@ plateau create_plateau(){
     faction fa;
     faction fb;
 
-    fa.nom = "Premier joueur";
+    fa.nom = "Joueur 1";
     fa.nb_v=0;
     fa.nb_point=0;
     fa.redraw=0;
@@ -85,7 +84,7 @@ plateau create_plateau(){
     clearHand(&fa);
     shuffle(&fa);
 
-    fb.nom = "Deuxième joueur";
+    fb.nom = "Joueur 2";
     fb.nb_v=0;
     fb.nb_point=0;
     fb.redraw=0;
@@ -140,7 +139,7 @@ carte flip_card(plateau *p){
             }
         }
     }
-    //active(c, f, p, x, y);
+    //active(c, f, p, x, y); Ne fonctionne pas correctement.
     last_card = c.function_number;
     return c;
 }
@@ -154,15 +153,18 @@ void victory_manche(plateau* p){
         if ( p -> fa.nb_point > p-> fb.nb_point){
             p -> fa.nb_v++;
             printf("victoire du %s!\n", p->fa.nom);
+            printf("nombre de victoire: %i!\n", p->fa.nb_v);
         } else if ( p -> fa.nb_point < p-> fb.nb_point){
             p -> fb.nb_v++;
             printf("victoire du %s!\n", p->fb.nom);
+            printf("nombre de victoire: %i!\n", p->fb.nb_v);
         } else {
             for (i = 0; i <4 * HAND_SIZE -1; i++){
             for (j=0; j< 4* HAND_SIZE -1; j++){
                 if ((!empty(p-> plateau.cases[i][j].carte))){
                     p-> plateau.cases[i][j].fac->nb_v ++;
                     printf("victoire du %s!\n", p->plateau.cases[i][j].fac->nom);
+                    printf("nombre de victoire: %i!\n", p->plateau.cases[i][j].fac->nb_v);
                     goto END;
                 }
             }
