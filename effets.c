@@ -709,7 +709,7 @@ void f_CM(plateau m){
         for (int j=0; j<N; j++){
             carte current_carte = get_c_carte(m,i,j);
             int current_sens=get_c_sens(m,i,j);
-            if (  (!strcmp(current_carte.name,"Christophe Mouilleron")||!equals(current_carte,"Heures supplémentaires"))&&(current_sens==1)){
+            if (  (!equals(current_carte,"Christophe Mouilleron")||!equals(current_carte,"Heures supplémentaires"))&&(current_sens==1)){
                  set_c_nulle(m,i,j);    
             }
         }
@@ -738,7 +738,7 @@ void f_TM(faction *p, plateau m){
         for (int j=0; j<N; j++){
             carte current_carte = get_c_carte(m,i,j);
             int current_sens=get_c_sens(m,i,j);
-            if (  (strcmp(current_carte.name,"Julien Forest")&&(current_sens==1))){
+            if (  (equals(current_carte,"Julien Forest")&&(current_sens==1))){
             forest=1;
             }
             if (  (equals(current_carte,"FISE")&&(current_sens==1))){
@@ -765,7 +765,7 @@ void f_TM(faction *p, plateau m){
 *\return nothing 
 */
 void f_JF(faction *p, plateau m){
-    int cafe;
+    int cafe=0;
     int cfise=0;
     
     //premières boucles sur le plateau, on cherche forest
