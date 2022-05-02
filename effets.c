@@ -6,7 +6,8 @@
 *Il contient les 32 fonctions relatives aux 32 cartes
 */
 
-
+#ifndef EFFETS_C
+#define EFFETS_C
 
 #include "struct.h"
 #include <stddef.h>
@@ -16,24 +17,14 @@
 #include <stdio.h>
 #include <string.h>
 #include "constante.h"
-#include "carte.c"
-#include "faction.c"
-#include "plateau.c"
-//#include "struct.c"
+#include "carte.h"
+#include "faction.h"
+#include "plateau.h"
 
-
-/* a mettre dans carte.c
-int equals_carte(carte c, carte v){
-    return (strcmp(c.name,v.name)&&(c.function_number==v.function_number));
-}
-
-
-#define N 32
-carte null={"null",-1};*/
 
 /**
 *\brief active la carte fise
-*\param p une une faction
+*\param p un pointeur vers la faction qui a pose la carte
 *\return nothing 
 */
 void f_fise(faction *p){
@@ -42,8 +33,8 @@ void f_fise(faction *p){
 
 /**
 *\brief active la carte fisa
-*\param p une vers une faction
-*\param m le plateau
+*\param f un pointeur vers la faction qui a pose la carte
+*\param p le plateau
 *\return nothing 
 */
 void f_fisa(faction *f,plateau p){
@@ -69,7 +60,7 @@ void f_fisa(faction *f,plateau p){
 
 /**
 *\brief active la carte fc
-*\param p une faction
+*\param  p un pointeur vers la faction qui a pose la carte
 *\param pl le plateau
 *\return nothing 
 */
@@ -95,7 +86,7 @@ void f_fc(faction *p,plateau pl){
 
 /**
 *\brief active la carte ecologiie
-*\param p une faction
+*\param  p un pointeur vers la faction qui a pose la carte
 *\param m le plateau
 *\return nothing 
 */
@@ -139,7 +130,7 @@ void randomize(carte arr[], int n) {
 
 /**
 *\brief fonction auxilière a la fonction qui active la carte liien, elle pose la carte c à la gauche de la carte la plus en haut à gauche du plateau
-*\param p une faction
+*\param p un pointeur vers la faction qui a pose la carte
 *\param m le plateau
 *\param c une carte
 *\return nothing 
@@ -154,8 +145,8 @@ void haut_gauche(plateau *m,carte c, faction *f){
             /* le cas current_sens==1 et i=0 n'est pas possible*/
             if (current_sens==1){
                 //m.cases[i-1][j]=(cell) {c,0,f};
-                set_c_carte(*m,f,i-1,j,c);
-
+                //set_c_carte(*m,f,i-1,j,c);
+                put_card(m,c,f,(i-1),j);
                 goto END;
             }
         }
@@ -166,8 +157,8 @@ void haut_gauche(plateau *m,carte c, faction *f){
 
 /**
 *\brief active la carte liiens
-*\param p une faction
-*\param m le plateau
+*\param p un pointeur vers la faction qui a pose la carte
+*\param m un pointeur vers le plateau
 *\return nothing 
 */
 void f_liiens(faction *p,plateau *m){
@@ -272,21 +263,22 @@ void f_ssa(/*faction p,*/plateau m){
 *\brief active les effets de la carte alcool
 
 *\param m le plateau
+*\param i entier le numéro de ligne de la carte
+*\param j un entier la colonne de la carte
 *\return nothing 
 */
 void f_alcool(plateau m, int i, int j){
 
 
     /* avec l'implémenation qu'on à on est jamais au bord du plateau*/
-    m.plateau.cases[(i-1)][j]= CLN;
+    /*m.plateau.cases[(i-1)][j]= CLN;
     m.plateau.cases[i+1][j]=CLN;
     m.plateau.cases[i][j-1]=CLN;
-    m.plateau.cases[i][j+1]=CLN;
-    /*set_c_nulle(m,(i-1),j);
+    m.plateau.cases[i][j+1]=CLN;*/
+    set_c_nulle(m,(i-1),j);
     set_c_nulle(m,(i+1),j);
     set_c_nulle(m,i,(j-1));
-    set_c_nulle(m,i,(j+1));*/
-
+    set_c_nulle(m,i,(j+1));
 }
 /**
 *\brief active les effets de la carte café
@@ -316,7 +308,7 @@ void f_cafe(faction *p,plateau m){
 }
 /**
 *\brief active les effets de la carte thé
-*\param p une faction
+*\param p un pointeur vers la faction qui a posé la carte
 *\param m le plateau
 *\return nothing 
 */
@@ -401,7 +393,7 @@ void f_isolation(plateau m, faction p){
 
 /**
 *\brief active les effets de la carte sobriété
-*\param p une faction
+
 *\param m le plateau
 *\return nothing 
 */
@@ -490,7 +482,7 @@ void f_KB(faction p,plateau m){
 
 /**
 *\brief active les effets de la carte Kevin Goilard
-*\param p une faction
+*\param p un pointeur vers une faction
 *\param m le plateau
 *\return nothing 
 */
@@ -518,10 +510,10 @@ void f_KG(faction *p,plateau m){
 *\brief active l'effet de la carte Merabet 
 *\param p une faction
 *\param m le plateau
-*\param c la dernière carte qui a été retournée 
+
 *\return nothing 
 */
-void f_MM(faction p,plateau m, carte c){}
+void f_MM(faction p,plateau m){}
 
 
 
@@ -531,7 +523,6 @@ void f_MM(faction p,plateau m, carte c){}
 *\brief active l'effet de la carte Vitera Y
 *\param p une faction
 *\param m le plateau
-*\param c la dernière carte qui a été retournée 
 *\return nothing 
 */
 
@@ -552,7 +543,7 @@ void f_VY(faction p,plateau m){
 *\brief active l'effet de la carte Jonas Senizergues
 *\param p une faction
 *\param m le plateau
-*\param c la dernière carte qui a été retournée 
+
 *\return nothing 
 */
 
@@ -578,7 +569,6 @@ void f_JS(faction p,plateau m){
 *\brief active l'effet de la carte Fetia Bannour
 *\param p une faction
 *\param m le plateau
-*\param c la dernière carte qui a été retournée 
 *\return nothing 
 */
 
@@ -606,7 +596,6 @@ void f_FB(faction p,plateau m){
 *\brief active l'effet de la carte Catherine Dubois
 *\param p une faction
 *\param m le plateau
-*\param c la dernière carte qui a été retournée 
 *\return nothing 
 */
 
@@ -660,7 +649,7 @@ void supprime_last(plateau m){
 *\brief active l'effet de la carte Anne-Laure Ligozat
 *\param p une faction
 *\param m le plateau
-*\param c la dernière carte qui a été retournée 
+
 *\return nothing 
 */
 
@@ -916,7 +905,7 @@ void f_LP(plateau m, int x, int y, faction *p){
 *\param p un pointeur vers la faction qui pose la carte
 *\param m le plateau
 *\param x l'entier numéro de ligne de la carte
-*\param y l'entier numéro de colonne de la carte
+
 *\return nothing 
 */
 
@@ -957,8 +946,7 @@ void f_KS(faction *p, plateau m, int x){
 *\brief active l'effet de la carte Laurent Prevel
 *\param p un pointeur vers la faction qui pose la carte
 *\param m le plateau
-*\param x l'entier numéro de ligne de la carte
-*\param y l'entier numéro de colonne de la carte
+
 *\return nothing 
 */
 
@@ -1104,3 +1092,5 @@ void active(carte c, faction* p, plateau* m,int i, int j){
 
 
 }
+
+#endif
