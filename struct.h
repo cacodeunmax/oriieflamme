@@ -84,7 +84,7 @@ void grid_free(grid g);
 /**
 * \brief Create a pioche
 * \return The created pioche
-*\
+*/
 pioche create_empty_pioche();
 
 
