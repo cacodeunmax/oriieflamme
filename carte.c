@@ -1,13 +1,20 @@
 #ifndef CARTE_C
 #define CARTE_C
 
-#include "struct.h"
+
 #include <stddef.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "struct.c"
+
 #include "constante.h"
+#include "struct.h"
+
+extern carte CN;
+extern cell CLN;
+extern faction FN;
+extern int prevel;
+
 
 
 char* get_name(carte c){
@@ -147,7 +154,7 @@ void create_catalogue(carte catalogue[]){
     gb.desc="Si la faction adverse de celle qui a posé cette carte a plus de points DDRS, la seconde lui vole 3 points DDRS.";
 
     carte cm;
-    cm.name="Cristophe Mouilleron";
+    cm.name="Christophe Mouilleron";
     cm.function_number=24;
     cm.desc="Si la carte Heures supplémentaires est retournée sur le plateau, supprimez toutes les cartes retournées du plateau sauf les cartes Christophe Mouilleron et Heures supplémentaires.";
 
