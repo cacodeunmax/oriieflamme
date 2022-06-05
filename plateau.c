@@ -4,11 +4,10 @@
 #include <string.h>
 #include <stddef.h>
 #include <stdlib.h>
-#include "faction.h"
-#include "struct.h"
-#include "constante.h"
-//#include "effets.c"
-
+#include "plateau.h"
+#include "effets.h"
+#include <stdio.h>
+extern int prevel;
 
 /**
 * \file plateau.c
@@ -19,18 +18,23 @@
 
 
 int get_c_sens(plateau p, int x, int y){
-    return p.plateau.cases[x][y].sens;
+    if (p.plateau.cases[x][y].sens >0){
+        return 1;
+    } else {
+        return 0;
+    }
+    
 }
 
 carte get_c_carte(plateau p, int x, int y){
     return p.plateau.cases[x][y].carte;
 }
 
-faction get_adverse(plateau p, faction f){
-    if (&(p.fa) == &f){
-        return p.fb;
+faction* get_adverse(plateau *p, faction f){
+    if (strcmp(p->fa.nom,f.nom)==0){
+        return &p->fb;
     } else {
-        return  p.fa;
+        return  &p->fa;
     }
 }
 
@@ -65,7 +69,7 @@ void set_victory(faction *f){
 
 plateau create_plateau(){
     plateau p;
-    p.plateau = grid_create(4*HAND_SIZE-1);
+    p.plateau = grid_create(N);
     int i, j;
     for (i = 0; i<p.plateau.size; i++){
         for (j=0; j< p.plateau.size; j++){
@@ -112,7 +116,7 @@ couple get_faction(plateau p){
 void put_card(plateau *p,carte c, faction *f, int x,int y){
     p-> plateau.cases[x][y].carte= c;
     p-> plateau.cases[x][y].fac = f;
-
+    p-> plateau.cases[x][y].sens = 0;
 }
 
 
@@ -124,11 +128,12 @@ carte flip_card(plateau *p){
     c = CN;
 
     faction *f;
-    for (i = 0; i <4 * HAND_SIZE -1; i++){
-        for (j=0; j< 4 * HAND_SIZE -1; j++){
-           if ( strcmp(c.name, "null")){
+    for (i = 0; i <N; i++){
+        if ( strcmp(c.name, "null")){
                 break;
             } 
+        for (j=0; j< N; j++){
+           
             if ((!empty(p-> plateau.cases[i][j].carte))&&(!p-> plateau.cases[i][j].sens)){
                 p-> plateau.cases[i][j].sens = 1;
                 c = p-> plateau.cases[i][j].carte;
@@ -139,8 +144,8 @@ carte flip_card(plateau *p){
             }
         }
     }
-    //active(c, f, p, x, y); Ne fonctionne pas correctement.
-    last_card = c.function_number;
+    active(c, f, p, x, y);
+    //last_card = c.function_number;
     return c;
 }
 
@@ -159,12 +164,11 @@ void victory_manche(plateau* p){
             printf("victoire du %s!\n", p->fb.nom);
             printf("nombre de victoire: %i!\n", p->fb.nb_v);
         } else {
-            for (i = 0; i <4 * HAND_SIZE -1; i++){
-            for (j=0; j< 4* HAND_SIZE -1; j++){
+            for (i = 0; i <N; i++){
+            for (j=0; j< N; j++){
                 if ((!empty(p-> plateau.cases[i][j].carte))){
                     p-> plateau.cases[i][j].fac->nb_v ++;
                     printf("victoire du %s!\n", p->plateau.cases[i][j].fac->nom);
-                    printf("nombre de victoire: %i!\n", p->plateau.cases[i][j].fac->nb_v);
                     goto END;
                 }
             }
@@ -177,36 +181,35 @@ void victory_manche(plateau* p){
 
 int initialiser_manche(plateau p, faction* f1, faction* f2){
     prevel =0;
-    if (f1 == NULL){          
+    /*if (*f1 == NULL){          
         int r = rand() % 2;
         if (r){
-            *f1 = p.fa;
-            *f2 = p.fb;
+            *f1 = &p.fa;
+            *f2 = &p.fb;
         } else {
-            *f1 = p.fb;
-            *f2 = p.fa;  
+            *f1 = &p.fb;
+            *f2 = &p.fa;  
         }
         
-    } else if ((f1 -> nb_v == MG) || (f2 -> nb_v == MG)){
-        return 1;
-    
-    }else if (!(f1-> nb_point + f2 -> nb_point)%2){
+    } else if (!((*f1)-> nb_point + (*f2) -> nb_point)%2){
         int r = rand() % 2;
         if (r){
-            *f1 = p.fa;
-            *f2 = p.fb;
+            *f1 = &p.fa;
+            *f2 = &p.fb;
         } else {
-            *f1 = p.fb;
-            *f2 = p.fa;  
+            *f1 = &p.fb;
+            *f2 = &p.fa;  
         }
 
     } else {
-        faction temp = *f1;
+        faction* temp = *f1;
         *f1 = *f2;
         *f2= temp;
     }
-
-
+    */
+   if ((f1 -> nb_v == MG) || (f2 -> nb_v == MG)){
+        return 1;
+   }
     f1 -> nb_point=0;
     f2-> nb_point=0;
     clearHand(f1);
