@@ -20,6 +20,10 @@
 #include "carte.h"
 #include "faction.h"
 #include "struct.h"
+extern carte CN;
+extern cell CLN;
+extern faction FN;
+extern int prevel;
 
 /**
 *\brief donne le sens de la carte a la postion x y
@@ -122,5 +126,15 @@ le plateau est modifié, en l'occurence les factions définies dans le plateau
 *\return nothing
 */
 void victory_manche(plateau* p);
+
+
+
+
+
+
+faction* get_adverse(plateau *p, faction f);
+
+void set_victory(faction *f);
+void set_c_nulle (plateau p, int x, int y);
 
 #endif
