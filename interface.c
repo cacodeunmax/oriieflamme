@@ -5,18 +5,21 @@
 #include <string.h>
 #include <stddef.h>
 #include <stdlib.h>
-#include "faction.c"
-#include "struct.h"
-#include "constante.h"
-#include "plateau.c"
-#include "carte.c"
+#include "faction.h"
 
+#include "constante.h"
+
+#include "carte.h"
+#include "interface.h"
+
+
+#include "constante.h"
 
 
 void show_plateau(plateau p){
     carte temp;
-    for (int i =0; i < 4* HAND_SIZE -1; i++ ){
-        for (int j =0; j < 4* HAND_SIZE -1; j++ ){
+    for (int i =0; i <N; i++ ){
+        for (int j =0; j <N; j++ ){
             temp = get_c_carte(p, i, j);
             printf("%i ", !empty(temp));
         }
@@ -52,7 +55,7 @@ carte chose_card(faction *f){
 }
 
 int carte_adj(plateau p, int x, int y){
-    int max = 4 * HAND_SIZE -2;
+    int max = N-1;
     if ((x ==0 && y ==0)||(x==0 && y == max ) || (x == max && y == 0) || (x ==max && y == max)){
         return 0;
     } else if (x == 0) {
@@ -92,11 +95,11 @@ int carte_adj(plateau p, int x, int y){
 
 void chose_pos(plateau p, int* x, int* y){
     printf("Où souhaitez-vous poser votre carte?\nLes positions possibles sont:\n");
-    if (empty(get_c_carte(p, 2 * HAND_SIZE-1, 2 * HAND_SIZE -1))){
-        printf("%3d %3d\n", 2 * HAND_SIZE-1, 2 * HAND_SIZE -1);
+    if (empty(get_c_carte(p, (N-1)/2, (N-1)/2))){
+        printf("%3d %3d\n", (N-1)/2, (N-1)/2);
     } else {
-        for (int i =0; i < 4 * HAND_SIZE -1; i++){
-            for (int j =0; j < 4 * HAND_SIZE -1; j++){
+        for (int i =0; i < N; i++){
+            for (int j =0; j < N; j++){
                 if (carte_adj(p, i, j) && empty(get_c_carte(p, i,j))){
                     printf("%3d %3d\n", i, j);
                 }
@@ -123,30 +126,6 @@ void show_winner(plateau p){
 }
 
 void show_winner_manche(plateau p){
-    /*int i, j;
-    faction *f = &FN;
-    if ( p.fa.nb_point > p.fb.nb_point){
-        *f = p.fa;
-    } else if ( p.fa.nb_point < p.fb.nb_point){
-        *f = p.fb;
-    } else {
-        for (i = 0; i <31; i++){
-        for (j=0; j< 31; j++){
-            if ((!strcmp(p.plateau.cases[i][j].carte.name, "null"))){
-                f = p.plateau.cases[i][j].fac;
-                goto END;
-            }
-        }
-                
-
-    }
-    }
-    END:
-        if (*f == p.fa){
-            printf("Joueur 1 gagne la manche!");
-        } else {
-            printf("Joueur 2 gagne la manche!");
-        }*/
 
     printf("Nombre de victoire de Joueur 1: %i\n", get_vic(p.fa));
     printf("Nombre de victoire de Joueur 2: %i\n", get_vic(p.fb));
