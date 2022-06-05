@@ -55,6 +55,6 @@ int empty(carte c);
 * \param catalogue The catalogue where the cards will be staocked
 * \return nothing
 */
-void carte_catalogue(carte *catalogue);
+void create_catalogue(carte catalogue[]);
 
 #endif
