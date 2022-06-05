@@ -1,13 +1,21 @@
 #ifndef FACTION_C
 #define FACTION_C
 
-#include "struct.h"
-#include "struct.c"
+
+
 #include <stddef.h>
 #include <stdlib.h>
 #include <time.h>
 #include "constante.h"
-#include "carte.c"
+#include "carte.h"
+#include "faction.h"
+#include "struct.h"
+
+extern carte CN;
+extern cell CLN;
+extern faction FN;
+extern int prevel;
+
 
 /**
 * \file faction.c
@@ -21,12 +29,18 @@ int get_point(faction f){
     return f.nb_point;
 }
 
+
 int get_vic(faction f){
     return f.nb_v;
 }
 
 void add_point(faction *f, int p){
-    f->nb_point += p;
+    if (f->nb_point + p<0){
+        f->nb_point =0;
+    } else {
+        f->nb_point += p;
+    }
+    
 }
 
 
