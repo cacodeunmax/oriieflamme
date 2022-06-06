@@ -62,6 +62,8 @@ int main(){
                 first_player = second_player;
                 second_player= temp;
             }
+
+            
             printf("Tour du %s:\n", first_player->nom);
             show_hand(first_player);
             if (! has_redrawn(*first_player)){
@@ -83,7 +85,7 @@ int main(){
 
             /*boucle for pour poser les cartes des joueurs 1 et 2*/
             int i;
-            for (i=0; i<2; i++){
+            for (i=0; i<HAND_SIZE; i++){
                 printf("\n\nTour du %s:\n", first_player->nom);
                 show_plateau(p);
                 show_hand(first_player);
@@ -104,6 +106,10 @@ int main(){
             /*tant que l'on peut retourner des cartes, c'est a dire tant que flip_card ne renvoie pas null on les retourne*/   
             while (!empty(carte_buffer)){
                 carte_buffer=flip_card(&p);
+
+                if (get_func(carte_buffer)!=17){
+                    merabet=get_func(carte_buffer);}
+
                 if (!empty(carte_buffer)){
                    
                     printf("\n mon effet de carte \n");
