@@ -20,7 +20,7 @@
 
 
 #include "plateau.h"
-#include "struct.h"
+
 
 
 
