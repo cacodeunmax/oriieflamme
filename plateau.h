@@ -24,6 +24,7 @@ extern carte CN;
 extern cell CLN;
 extern faction FN;
 extern int prevel;
+extern int merabet;
 
 /**
 *\brief donne le sens de la carte a la postion x y
