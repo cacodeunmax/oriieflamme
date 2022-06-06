@@ -5,16 +5,14 @@
 #include <time.h>
 #include "interface.h"
 #include "constante.h"
-//#include "effets.c"
+#include "constantenn.h"
 
 int main(){
     
     srand(time(NULL));
     /*initialisation de la partie, du plateau, des factions et des variables que l'on va utiliser*/
     faction* first_player=NULL;
-    first_player = malloc(sizeof(faction));
     faction* second_player=NULL;
-    second_player = malloc(sizeof(faction));
     int* abscisse=malloc(sizeof(int));
     int* ordonne=malloc(sizeof(int));
     int  fin, repioche;
@@ -24,17 +22,23 @@ int main(){
 
     /*corps du jeu*/
     /*on utilise une boucle infinie mais en vérité il ya au maximum 3 manches dans une partie donc on va finir
-    par passer dans le if(fin) et donc par le return*/
-    
+    par passer dans le if(fin) et donc par le return. Présentement, l'assignation des points ne fonctionne pas
+    et la partie ne se finie donc jamais */
+
+    int r = rand() % 2;
+        if (r){
+            first_player = &p.fa;
+            second_player = &p.fb;
+        } else {
+            first_player = &p.fb;
+            second_player = &p.fa;  
+        }
     while (1){
 
 
         fin = initialiser_manche(p,first_player,second_player);
         if (fin) {
             show_winner(p);
-            free_plateau(p);
-            free(first_player);
-            free(second_player);
             return 0;
             } 
         else { /*si personne n'a encore gagne, la manche se deroule :*/
@@ -42,18 +46,34 @@ int main(){
 
             /*on de montre tour a tour aux joueurs 1 et 2 leurs cartes, si ils veulent repiocher et qu'ils ne l'ont pas deja
             fait au cour de la partie on les fait repiocher puis on leur montre leur nouvelle carte*/
+
+            if (!((first_player)-> nb_point + (second_player) -> nb_point)%2){
+            int r = rand() % 2;
+            if (r){
+                first_player = &p.fa;
+                second_player = &p.fb;
+            } else {
+                first_player = &p.fb;
+                second_player = &p.fa;  
+            }
+
+            } else {
+                faction* temp = first_player;
+                first_player = second_player;
+                second_player= temp;
+            }
+
+            
             printf("Tour du %s:\n", first_player->nom);
             show_hand(first_player);
             if (! has_redrawn(*first_player)){
                 repioche = show_redraw(first_player);
                 if (repioche){
                     redraw(first_player);
-                    first_player->nb_point++;
                     show_hand(first_player);
                 }
             }
 
-            //add_point(first_player, 2);
             printf("\n\nTour du %s:\n", second_player->nom);
             show_hand(second_player);
             if (! has_redrawn(*second_player)){
@@ -65,7 +85,7 @@ int main(){
 
             /*boucle for pour poser les cartes des joueurs 1 et 2*/
             int i;
-            for (i=0; i<HAND_SIZE; i++){
+            for (i=0; i<5; i++){
                 printf("\n\nTour du %s:\n", first_player->nom);
                 show_plateau(p);
                 show_hand(first_player);
@@ -86,8 +106,18 @@ int main(){
             /*tant que l'on peut retourner des cartes, c'est a dire tant que flip_card ne renvoie pas null on les retourne*/   
             while (!empty(carte_buffer)){
                 carte_buffer=flip_card(&p);
+
+                if (get_func(carte_buffer)!=17){
+                    merabet=get_func(carte_buffer);}
+
                 if (!empty(carte_buffer)){
+                   
+                    printf("\n mon effet de carte \n");
                     show_effect(carte_buffer);
+                    show_plateau(p);
+
+                    printf("\n\nPoints joueur 1: %i\n", p.fa.nb_point);
+                    printf("Points joueur 2: %i\n\n", p.fb.nb_point);
                 }
                 
             }
