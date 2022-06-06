@@ -10,6 +10,8 @@
 #define MG 2 
 
 
+
+//int last_card;
 //int prevel;
 
 #endif
