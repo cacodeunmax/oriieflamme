@@ -15,6 +15,7 @@ extern carte CN;
 extern cell CLN;
 extern faction FN;
 extern int prevel;
+extern int merabet;
 
 
 /**
@@ -35,7 +36,7 @@ int get_vic(faction f){
 }
 
 void add_point(faction *f, int p){
-    if (f->nb_point + p<0){
+    if ((f->nb_point + p)<0){
         f->nb_point =0;
     } else {
         f->nb_point += p;
