@@ -8,6 +8,7 @@
 #include "effets.h"
 #include <stdio.h>
 extern int prevel;
+extern int merabet;
 
 /**
 * \file plateau.c
