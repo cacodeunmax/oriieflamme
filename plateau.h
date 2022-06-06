@@ -20,6 +20,11 @@
 #include "carte.h"
 #include "faction.h"
 #include "struct.h"
+extern carte CN;
+extern cell CLN;
+extern faction FN;
+extern int prevel;
+extern int merabet;
 
 /**
 *\brief donne le sens de la carte a la postion x y
@@ -57,18 +62,6 @@ faction* get_c_fac(plateau p, int x, int y);
 *\return nothing
 */
 void set_c_sens(plateau p, int x, int y, int s);
-
-/**
-*\brief donne le sens de la carte a la postion x y
-*\param p le plateau,
-*\param x un entier qui représente la position en abscisse
-*\param y un entier qui représente la position en ordonne
-*\return le sens
-*/
-void set_c_carte(plateau p, int x, int y, carte c);
-
-
-void set_c_nulle (plateau p, int x, int y);
 
 /**
 *\brief créer un nouveau plateau (et les deux factions qui joueront dessus))
@@ -134,5 +127,15 @@ le plateau est modifié, en l'occurence les factions définies dans le plateau
 *\return nothing
 */
 void victory_manche(plateau* p);
+
+
+
+
+
+
+faction* get_adverse(plateau *p, faction f);
+
+void set_victory(faction *f);
+void set_c_nulle (plateau p, int x, int y);
 
 #endif
