@@ -1,6 +1,8 @@
 #ifndef STRUCT_H
 #define STRUCT_H
 
+#include "constante.h"
+
 /**
 * \file struct.h
 *
@@ -32,7 +34,7 @@ typedef struct hand{
 typedef struct faction{
     char* nom;
     int nb_point;
-    carte hand[8];
+    carte hand[HAND_SIZE];
     int redraw;
     int nb_v;
     pioche* pioche;
