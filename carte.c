@@ -14,6 +14,7 @@ extern carte CN;
 extern cell CLN;
 extern faction FN;
 extern int prevel;
+extern int merabet;
 
 
 
