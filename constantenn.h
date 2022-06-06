@@ -1,3 +1,4 @@
+
 #ifndef CONSTANTENN_H
 #define CONSTANTENN_H
 #include "struct.h"
@@ -6,7 +7,6 @@
  faction FN = {};
  cell CLN = {{ "null", -1, "carte nulle"}, 0, NULL};
 
-
-int prevel;
-
+int prevel=0;
+int merabet=0;
 #endif
